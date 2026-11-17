@@ -1,0 +1,38 @@
+<h1>Categorías</h1>
+
+<table>
+  <thead>
+    <tr><th>ID</th><th>Nombre</th><th>Descripción</th><th>Activa</th></tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let categoria of categorias()">
+      <td>{{ categoria.id }}</td>
+      <td>{{ categoria.name }}</td>
+      <td>{{ categoria.description }}</td>
+      <td>{{ categoria.active ? 'Sí' : 'No' }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<section class="tarjeta">
+  <h2>Nueva categoría <small>(solo ADMIN)</small></h2>
+  <form #miForm="ngForm" (ngSubmit)="onGuardar(miForm)">
+    <div class="campo">
+      <label for="name">Nombre</label>
+      <input type="text" id="name" name="name" ngModel required maxlength="50" #name="ngModel">
+      <div class="error" *ngIf="name.invalid && name.touched">
+        <div *ngIf="name.errors?.['required']">Nombre es obligatorio</div>
+      </div>
+    </div>
+    <div class="campo">
+      <label for="description">Descripción</label>
+      <input type="text" id="description" name="description" ngModel required maxlength="255" #description="ngModel">
+      <div class="error" *ngIf="description.invalid && description.touched">
+        <div *ngIf="description.errors?.['required']">Descripción es obligatoria</div>
+      </div>
+    </div>
+    <button type="submit" [disabled]="miForm.invalid">Guardar categoría</button>
+  </form>
+  <p class="aviso bueno" *ngIf="mensaje()">{{ mensaje() }}</p>
+  <p class="aviso malo" *ngIf="error()">{{ error() }}</p>
+</section>

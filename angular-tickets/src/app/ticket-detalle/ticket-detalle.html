@@ -1,0 +1,65 @@
+<p><a routerLink="/tickets">← Volver a la lista</a></p>
+
+<p class="aviso malo" *ngIf="error()">{{ error() }}</p>
+
+<div *ngIf="ticket() as t">
+  <section class="tarjeta">
+    <h1>#{{ t.id }} · {{ t.title }}</h1>
+    <p>{{ t.description }}</p>
+    <dl class="datos">
+      <div><dt>Estado</dt><dd><span class="etiqueta">{{ t.status }}</span></dd></div>
+      <div><dt>Prioridad</dt><dd>{{ t.priority }}</dd></div>
+      <div><dt>Categoría</dt><dd>{{ t.category }}</dd></div>
+      <div><dt>Creador</dt><dd>{{ t.creator }}</dd></div>
+      <div><dt>Creado</dt><dd>{{ t.createdAt | date: 'dd/MM/yyyy HH:mm' }}</dd></div>
+      <div><dt>Versión</dt><dd>{{ t.version }}</dd></div>
+    </dl>
+  </section>
+
+  <section class="tarjeta">
+    <h2>Cambiar estado <small>(solo ADMIN)</small></h2>
+    <form class="en-linea" #estadoForm="ngForm" (ngSubmit)="onCambiarEstado(estadoForm)">
+      <div class="campo">
+        <label for="status">Nuevo estado</label>
+        <select id="status" name="status" ngModel required #status="ngModel">
+          <option value="">Seleccione…</option>
+          <option value="OPEN">OPEN</option>
+          <option value="IN_PROGRESS">IN_PROGRESS</option>
+          <option value="RESOLVED">RESOLVED</option>
+          <option value="CLOSED">CLOSED</option>
+        </select>
+        <div class="error" *ngIf="status.invalid && status.touched">
+          <div *ngIf="status.errors?.['required']">Estado es obligatorio</div>
+        </div>
+      </div>
+      <button type="submit" [disabled]="estadoForm.invalid">Guardar estado</button>
+    </form>
+    <p class="aviso bueno" *ngIf="mensajeEstado()">{{ mensajeEstado() }}</p>
+    <p class="aviso malo" *ngIf="errorEstado()">{{ errorEstado() }}</p>
+  </section>
+
+  <section class="tarjeta">
+    <h2>Comentarios ({{ comentarios().length }})</h2>
+    <ul class="comentarios">
+      <li *ngFor="let comentario of comentarios()">
+        <strong>{{ comentario.author }}</strong>
+        <small>{{ comentario.createdAt | date: 'dd/MM/yyyy HH:mm' }}</small>
+        <p>{{ comentario.content }}</p>
+      </li>
+      <li *ngIf="comentarios().length === 0">Aún no hay comentarios.</li>
+    </ul>
+
+    <form [formGroup]="comentarioForm" (ngSubmit)="onComentar()">
+      <div class="campo">
+        <label for="content">Nuevo comentario</label>
+        <textarea id="content" formControlName="content" rows="3"></textarea>
+        <div class="error" *ngIf="comentarioForm.get('content')?.touched && comentarioForm.get('content')?.invalid">
+          <small *ngIf="comentarioForm.get('content')?.errors?.['required']">Comentario es obligatorio</small>
+          <small *ngIf="comentarioForm.get('content')?.errors?.['maxlength']">Máximo 1000 caracteres</small>
+        </div>
+      </div>
+      <button type="submit" [disabled]="comentarioForm.invalid">Comentar</button>
+    </form>
+    <p class="aviso malo" *ngIf="errorComentario()">{{ errorComentario() }}</p>
+  </section>
+</div>

@@ -1,0 +1,45 @@
+<section class="tarjeta">
+  <h1>Nuevo usuario <small>(solo ADMIN)</small></h1>
+  <form [formGroup]="miForm" (ngSubmit)="onSubmit()">
+    <div class="campo">
+      <label for="username">Usuario</label>
+      <input id="username" formControlName="username">
+      <div class="error" *ngIf="miForm.get('username')?.touched && miForm.get('username')?.invalid">
+        <small *ngIf="miForm.get('username')?.errors?.['required']">Usuario es obligatorio</small>
+      </div>
+    </div>
+    <div class="campo">
+      <label for="password">Contraseña</label>
+      <input id="password" type="password" formControlName="password">
+      <div class="error" *ngIf="miForm.get('password')?.touched && miForm.get('password')?.invalid">
+        <small *ngIf="miForm.get('password')?.errors?.['required']">Contraseña es obligatoria</small>
+        <small *ngIf="miForm.get('password')?.errors?.['minlength']">Mínimo 6 caracteres</small>
+      </div>
+    </div>
+    <div class="campo">
+      <label for="fullName">Nombre completo</label>
+      <input id="fullName" formControlName="fullName">
+      <div class="error" *ngIf="miForm.get('fullName')?.touched && miForm.get('fullName')?.invalid">
+        <small *ngIf="miForm.get('fullName')?.errors?.['required']">Nombre es obligatorio</small>
+      </div>
+    </div>
+    <div class="campo">
+      <label for="email">Email</label>
+      <input id="email" formControlName="email">
+      <div class="error" *ngIf="miForm.get('email')?.touched && miForm.get('email')?.invalid">
+        <small *ngIf="miForm.get('email')?.errors?.['required']">Email es obligatorio</small>
+        <small *ngIf="miForm.get('email')?.errors?.['email']">Email no es válido</small>
+      </div>
+    </div>
+    <div class="campo">
+      <label for="role">Rol</label>
+      <select id="role" formControlName="role">
+        <option value="USER">USER</option>
+        <option value="ADMIN">ADMIN</option>
+      </select>
+    </div>
+    <button type="submit" [disabled]="miForm.invalid">Crear usuario</button>
+  </form>
+  <p class="aviso bueno" *ngIf="creado() as u">Usuario "{{ u.username }}" creado con id {{ u.id }} y rol {{ u.roles.join(', ') }}</p>
+  <p class="aviso malo" *ngIf="error()">{{ error() }}</p>
+</section>

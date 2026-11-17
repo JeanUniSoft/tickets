@@ -1,0 +1,41 @@
+<section class="tarjeta">
+  <h1>Nuevo ticket</h1>
+  <form [formGroup]="miForm" (ngSubmit)="onSubmit()">
+    <div class="campo">
+      <label for="title">Título</label>
+      <input id="title" formControlName="title">
+      <div class="error" *ngIf="miForm.get('title')?.touched && miForm.get('title')?.invalid">
+        <small *ngIf="miForm.get('title')?.errors?.['required']">Título es obligatorio</small>
+        <small *ngIf="miForm.get('title')?.errors?.['maxlength']">Máximo 150 caracteres</small>
+      </div>
+    </div>
+    <div class="campo">
+      <label for="description">Descripción</label>
+      <textarea id="description" formControlName="description" rows="4"></textarea>
+      <div class="error" *ngIf="miForm.get('description')?.touched && miForm.get('description')?.invalid">
+        <small *ngIf="miForm.get('description')?.errors?.['required']">Descripción es obligatoria</small>
+        <small *ngIf="miForm.get('description')?.errors?.['maxlength']">Máximo 2000 caracteres</small>
+      </div>
+    </div>
+    <div class="campo">
+      <label for="priority">Prioridad</label>
+      <select id="priority" formControlName="priority">
+        <option value="LOW">LOW</option>
+        <option value="MEDIUM">MEDIUM</option>
+        <option value="HIGH">HIGH</option>
+      </select>
+    </div>
+    <div class="campo">
+      <label for="categoryId">Categoría</label>
+      <select id="categoryId" formControlName="categoryId">
+        <option value="">Seleccione…</option>
+        <option *ngFor="let categoria of categorias()" [value]="categoria.id">{{ categoria.name }}</option>
+      </select>
+      <div class="error" *ngIf="miForm.get('categoryId')?.touched && miForm.get('categoryId')?.invalid">
+        <small *ngIf="miForm.get('categoryId')?.errors?.['required']">Categoría es obligatoria</small>
+      </div>
+    </div>
+    <button type="submit" [disabled]="miForm.invalid">Crear ticket</button>
+  </form>
+  <p class="aviso malo" *ngIf="error()">{{ error() }}</p>
+</section>

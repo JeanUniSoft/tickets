@@ -1,0 +1,1180 @@
+<meta charset="utf-8">
+<title>Guía de exposición Tickets</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: barra de pestañas fija arriba; cada pestaña es una herramienta de estudio.
+   La pestaña Flujo es el centro: tubería de capas arriba, pasos con código anotado abajo. */
+:root {
+  --bg: #f1f4f6;
+  --surface: #ffffff;
+  --sunken: #e7ecf0;
+  --ink: #15202b;
+  --muted: #566573;
+  --line: #d3dbe2;
+  --accent: #0a6a70;
+  --accent-soft: #dcefef;
+  --ok: #1b7a48;
+  --ok-soft: #dff2e6;
+  --warn: #8f5200;
+  --warn-soft: #fbecd2;
+  --bad: #b3261e;
+  --bad-soft: #fbe1df;
+  --code-ink: #1d2b38;
+  --display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f161d; --surface: #17212b; --sunken: #111a22; --ink: #e5ecf2; --muted: #93a2b1;
+    --line: #2a3846; --accent: #56c5c7; --accent-soft: #123a3d; --ok: #63d394; --ok-soft: #133524;
+    --warn: #f1b560; --warn-soft: #3b2a10; --bad: #ff8f85; --bad-soft: #43191a; --code-ink: #d6e0e9;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f161d; --surface: #17212b; --sunken: #111a22; --ink: #e5ecf2; --muted: #93a2b1;
+  --line: #2a3846; --accent: #56c5c7; --accent-soft: #123a3d; --ok: #63d394; --ok-soft: #133524;
+  --warn: #f1b560; --warn-soft: #3b2a10; --bad: #ff8f85; --bad-soft: #43191a; --code-ink: #d6e0e9;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 15px; line-height: 1.55; }
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+code, .mono { font-family: var(--mono); font-size: 0.9em; }
+a { color: var(--accent); }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; line-height: 1.15; margin: 0; }
+h1 { font-size: 1.7rem; font-weight: 800; letter-spacing: -0.01em; }
+h2 { font-size: 1.25rem; font-weight: 800; }
+h3 { font-size: 1rem; font-weight: 600; }
+p { margin: 0; }
+.wrap { max-width: 1120px; margin: 0 auto; padding-inline: 16px; }
+header.top { padding-block: 22px 14px; display: flex; flex-direction: column; gap: 6px; }
+header.top p { color: var(--muted); max-width: 70ch; }
+.eyebrow { font-size: 0.72rem; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+
+nav.tabs { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line); }
+nav.tabs .wrap { display: flex; gap: 2px; overflow-x: auto; }
+nav.tabs button { background: none; border: 0; border-bottom: 3px solid transparent; padding: 10px 12px; white-space: nowrap; color: var(--muted); font-weight: 500; }
+nav.tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); font-weight: 600; }
+
+main { padding-block: 22px 60px; }
+section.tab { display: flex; flex-direction: column; gap: 18px; }
+.lead { color: var(--muted); max-width: 72ch; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+.pts { font-family: var(--display); font-weight: 800; font-size: 1.5rem; color: var(--accent); font-variant-numeric: tabular-nums; }
+ul.clean { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 5px; }
+.note { border-left: 3px solid var(--warn); background: var(--warn-soft); padding: 10px 12px; border-radius: 0 6px 6px 0; }
+.note strong { color: var(--warn); }
+
+.chip { display: inline-block; font-family: var(--mono); font-size: 0.74rem; font-weight: 500; padding: 1px 7px; border-radius: 3px; background: var(--sunken); color: var(--ink); white-space: nowrap; }
+.chip.GET { background: var(--accent-soft); color: var(--accent); }
+.chip.POST { background: var(--ok-soft); color: var(--ok); }
+.chip.PUT { background: var(--warn-soft); color: var(--warn); }
+.st { font-family: var(--mono); font-weight: 500; font-size: 0.8rem; padding: 1px 7px; border-radius: 3px; white-space: nowrap; }
+.st.s2 { background: var(--ok-soft); color: var(--ok); }
+.st.s4 { background: var(--bad-soft); color: var(--bad); }
+
+.tablebox { overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 0.72rem; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); background: var(--sunken); }
+tr:last-child td { border-bottom: 0; }
+td.nw { white-space: nowrap; }
+
+/* Flujo */
+.ops { display: grid; gap: 8px; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); }
+.ops button { text-align: left; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px; display: flex; gap: 8px; align-items: baseline; min-width: 0; }
+.ops button span.p { font-family: var(--mono); font-size: 0.8rem; overflow-wrap: anywhere; min-width: 0; }
+.ops button[aria-pressed="true"] { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.pills button { background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 5px 12px; display: flex; gap: 8px; align-items: center; }
+.pills button[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.pipe { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.pipe .node { border: 1px solid var(--line); background: var(--surface); border-radius: 4px; padding: 5px 9px; font-size: 0.8rem; font-weight: 500; }
+.pipe .node.off { opacity: 0.38; border-style: dashed; }
+.pipe .node.on { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+.pipe .arrow { color: var(--muted); font-size: 0.8rem; }
+.two { display: grid; gap: 14px; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+@media (max-width: 760px) { .two { grid-template-columns: minmax(0, 1fr); } }
+pre.raw { margin: 0; font-family: var(--mono); font-size: 0.8rem; white-space: pre-wrap; overflow-wrap: anywhere; background: var(--sunken); color: var(--code-ink); padding: 10px 12px; border-radius: 4px; }
+.steps { display: flex; flex-direction: column; gap: 8px; }
+.step { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; min-width: 0; }
+.step > button { width: 100%; text-align: left; background: none; border: 0; padding: 10px 12px; display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 10px; align-items: start; }
+.step .n { font-family: var(--mono); font-size: 0.8rem; color: var(--muted); padding-top: 2px; font-variant-numeric: tabular-nums; }
+.step .lay { font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); font-weight: 600; display: block; }
+.step.active { border-color: var(--accent); }
+.step .body { padding: 0 12px 12px 48px; display: flex; flex-direction: column; gap: 8px; }
+@media (max-width: 560px) { .step .body { padding-left: 12px; } }
+.ctrl { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.btn { background: var(--surface); border: 1px solid var(--line); border-radius: 4px; padding: 6px 12px; font-weight: 500; }
+.btn.pri { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+.btn:disabled { opacity: 0.45; cursor: default; }
+.small { font-size: 0.82rem; color: var(--muted); }
+
+/* Código anotado */
+.blk { border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: var(--surface); min-width: 0; }
+.blk .bh { display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; padding: 6px 10px; background: var(--sunken); font-size: 0.78rem; color: var(--muted); }
+.blk .bh b { color: var(--ink); font-family: var(--mono); font-weight: 500; }
+.row { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); border-top: 1px solid var(--line); }
+.row:first-of-type { border-top: 0; }
+.row pre { margin: 0; padding: 5px 10px; font-family: var(--mono); font-size: 0.78rem; white-space: pre-wrap; overflow-wrap: anywhere; color: var(--code-ink); }
+.row .why { padding: 5px 10px; font-size: 0.84rem; border-left: 1px solid var(--line); background: var(--surface); }
+.row.has pre { background: var(--accent-soft); }
+.row.plain .why { background: transparent; }
+@media (max-width: 760px) { .row { grid-template-columns: minmax(0, 1fr); } .row .why { border-left: 0; } .row.plain .why { display: none; } }
+.quiz .row.has .why > span { visibility: hidden; }
+.quiz .row.has { cursor: pointer; }
+.quiz .row.has.open .why > span { visibility: visible; }
+.quiz .row.has:not(.open) .why::before { content: "Toca para ver la explicación"; color: var(--muted); font-size: 0.78rem; position: absolute; }
+.quiz .row.has .why { position: relative; }
+.codelay { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 16px; align-items: start; }
+@media (max-width: 820px) { .codelay { grid-template-columns: minmax(0, 1fr); } }
+.files { display: flex; flex-direction: column; gap: 10px; }
+.files .g { display: flex; flex-direction: column; gap: 2px; }
+.files button { text-align: left; background: none; border: 0; border-left: 3px solid transparent; padding: 3px 8px; font-family: var(--mono); font-size: 0.8rem; }
+.files button[aria-pressed="true"] { border-left-color: var(--accent); background: var(--accent-soft); }
+@media (max-width: 820px) { .files { flex-direction: row; flex-wrap: wrap; } }
+.filemain { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+
+details.q { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
+details.q summary { padding: 10px 12px; font-weight: 600; cursor: pointer; }
+details.q div { padding: 0 12px 12px; max-width: 78ch; }
+.cmd { display: flex; flex-direction: column; gap: 6px; }
+.cmd .hd { display: flex; gap: 8px; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+@media (prefers-reduced-motion: no-preference) { .step, .ops button, .pipe .node { transition: border-color .15s, background-color .15s, opacity .15s; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <span class="eyebrow">UTP · Desarrollo Web Integrado</span>
+    <h1>Guía de exposición · Gestor de Tickets</h1>
+    <p>Sigue una petición desde que sale del cliente hasta la respuesta JSON, con cada línea del código explicada: qué significa y por qué se usa. Código real del repositorio <a href="https://github.com/JeanUniSoft/tickets">JeanUniSoft/tickets</a>.</p>
+  </header>
+</div>
+<nav class="tabs" aria-label="Secciones"><div class="wrap" role="tablist" id="tabs"></div></nav>
+<main class="wrap" id="main"></main>
+
+<script>
+(function () {
+'use strict';
+
+/* ---------- utilidades ---------- */
+function h(tag, attrs) {
+  var el = document.createElement(tag), i, k, c;
+  if (attrs) for (k in attrs) {
+    if (k === 'class') el.className = attrs[k];
+    else if (k === 'text') el.textContent = attrs[k];
+    else if (k.slice(0, 2) === 'on') el.addEventListener(k.slice(2), attrs[k]);
+    else if (attrs[k] !== false && attrs[k] != null) el.setAttribute(k, attrs[k]);
+  }
+  for (i = 2; i < arguments.length; i++) {
+    c = arguments[i];
+    if (c == null || c === false) continue;
+    if (Array.isArray(c)) c.forEach(function (x) { if (x) el.appendChild(typeof x === 'string' ? document.createTextNode(x) : x); });
+    else el.appendChild(typeof c === 'string' ? document.createTextNode(c) : c);
+  }
+  return el;
+}
+/* texto con `codigo` en línea */
+function rich(s) {
+  var parts = String(s).split('`'), out = [];
+  parts.forEach(function (p, i) { if (p) out.push(i % 2 ? h('code', { text: p }) : p); });
+  return out;
+}
+function parse(src) {
+  var blocks = [], cur = null;
+  src.replace(/^\n/, '').replace(/\n$/, '').split('\n').forEach(function (l) {
+    if (l.slice(0, 2) === '@@') {
+      var sp = l.slice(2).trim().split(' ');
+      cur = { k: sp.shift(), title: sp.join(' '), lines: [] }; blocks.push(cur);
+    } else {
+      var i = l.indexOf(' ¦ ');
+      cur.lines.push(i < 0 ? [l, ''] : [l.slice(0, i).replace(/\s+$/, ''), l.slice(i + 3)]);
+    }
+  });
+  return blocks;
+}
+function statusChip(code) { return h('span', { class: 'st ' + (code < 300 ? 's2' : 's4'), text: String(code) }); }
+
+/* ---------- código anotado (fuente única para Flujo y Código) ---------- */
+var FILES = [
+{ id: 'props', g: 'Configuración', name: 'application.properties', path: 'src/main/resources/', intro: 'Configuración de la aplicación. Los secretos no están aquí: se leen del archivo .env, que no se sube a git.', src: `
+@@all Propiedades
+spring.config.import=optional:file:.env[.properties] ¦ Lee el archivo .env como si fuera otro archivo de propiedades. Por eso DB_PASSWORD y JWT_SECRET no aparecen en el repositorio.
+spring.datasource.url=\${DB_URL} ¦ Dirección de PostgreSQL (Neon). El valor real viene de .env.
+spring.datasource.username=\${DB_USERNAME}
+spring.datasource.password=\${DB_PASSWORD}
+spring.jpa.hibernate.ddl-auto=validate ¦ Hibernate no crea ni cambia tablas: solo comprueba que coinciden con las entidades. Las tablas las crea Flyway. Si algo no coincide, la aplicación no arranca.
+spring.jpa.open-in-view=false ¦ La conexión a la base se suelta al terminar el servicio. Obliga a convertir a DTO dentro de la transacción y evita consultas escondidas al escribir el JSON.
+spring.data.web.pageable.max-page-size=100 ¦ Tope del parámetro size. Sin tope, alguien pediría size=1000000 y tumbaría el servidor.
+jwt.secret=\${JWT_SECRET} ¦ Clave con la que se firman los tokens. Mínimo 32 bytes para HS256.
+jwt.expiration=60m ¦ Duración del token. Se cambia sin tocar código.
+` },
+{ id: 'jwtprops', g: 'Seguridad (JWT)', name: 'JwtProperties.java', path: 'security/', intro: 'Agrupa las propiedades jwt.* en un objeto con tipos.', src: `
+@@all JwtProperties
+@ConfigurationProperties(prefix = "jwt") ¦ Le dice a Spring: toma las propiedades que empiezan con jwt. y mételas en este objeto. Así la clave y la duración no están escritas en el código.
+public record JwtProperties(String secret, Duration expiration) { ¦ Un record es una clase inmutable de solo datos. secret recibe jwt.secret y expiration recibe jwt.expiration (Spring convierte 60m a Duration).
+}
+` },
+{ id: 'jwtservice', g: 'Seguridad (JWT)', name: 'JwtService.java', path: 'security/', intro: 'El único lugar que sabe crear y verificar tokens. Usa la librería JJWT 0.12.', src: `
+@@ctor Constructor: preparar la clave
+@Service ¦ Spring crea un solo objeto de esta clase y lo inyecta donde se pida.
+public class JwtService {
+    private final SecretKey key;
+    private final Duration expiration;
+
+    public JwtService(JwtProperties properties) { ¦ Inyección por constructor: recibe la configuración ya leída.
+        this.key = Keys.hmacShaKeyFor(properties.secret().getBytes(StandardCharsets.UTF_8)); ¦ Convierte el texto de JWT_SECRET en una clave HMAC. Si tiene menos de 32 bytes lanza WeakKeyException y la aplicación no arranca.
+        this.expiration = properties.expiration();
+    }
+@@generate generateToken: crear el token
+    public String generateToken(String username) {
+        Instant now = Instant.now();
+        return Jwts.builder()
+                .subject(username) ¦ Campo sub: el dueño del token. Solo el username, no los roles: los roles se leen de la base en cada petición, así un cambio de rol aplica de inmediato.
+                .issuedAt(Date.from(now)) ¦ Campo iat: cuándo se emitió.
+                .expiration(Date.from(now.plus(expiration))) ¦ Campo exp: cuándo vence (ahora + 60 minutos).
+                .signWith(key, Jwts.SIG.HS256) ¦ Firma el contenido con la clave secreta. Si alguien cambia el contenido, la firma ya no coincide.
+                .compact(); ¦ Devuelve el texto final: cabecera.contenido.firma
+    }
+@@extract extractUsername: verificar el token
+    public String extractUsername(String token) {
+        return Jwts.parser()
+                .verifyWith(key) ¦ Con qué clave se comprueba la firma.
+                .build()
+                .parseSignedClaims(token) ¦ Aquí ocurre la verificación. Lanza JwtException si la firma no coincide, el token venció o está mal formado.
+                .getPayload()
+                .getSubject(); ¦ Si todo está bien, devuelve el username guardado en sub.
+    }
+}
+` },
+{ id: 'uds', g: 'Seguridad (JWT)', name: 'CustomUserDetailsService.java', path: 'security/', intro: 'Aquí se cumple "usuarios manejados desde base de datos": enseña a Spring Security a buscar un usuario en la tabla users.', src: `
+@@all loadUserByUsername
+@Service
+public class CustomUserDetailsService implements UserDetailsService { ¦ UserDetailsService es la interfaz que Spring Security usa para buscar usuarios. Spring no conoce nuestra tabla: esta clase se la presenta.
+    @Override
+    @Transactional(readOnly = true) ¦ Mantiene la conexión abierta mientras dura el método. Sin esto, leer los roles (relación LAZY) fallaría con LazyInitializationException.
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByUsername(username) ¦ SELECT en la tabla users por username.
+                .orElseThrow(() -> new UsernameNotFoundException("No existe el usuario " + username)); ¦ Si no existe, el filtro lo trata como anónimo y el login responde 401.
+
+        List<SimpleGrantedAuthority> authorities = user.getRoles().stream() ¦ Lee los roles desde user_roles y roles.
+                .map(role -> new SimpleGrantedAuthority(role.getName())) ¦ Convierte cada rol (ROLE_ADMIN, ROLE_USER) al formato que entiende Spring Security.
+                .toList();
+
+        return org.springframework.security.core.userdetails.User ¦ Nombre completo porque se llama igual que nuestra entidad User.
+                .withUsername(user.getUsername())
+                .password(user.getPasswordHash()) ¦ Entrega el hash BCrypt; en el login Spring lo compara con la contraseña enviada.
+                .authorities(authorities) ¦ Con estos roles funciona luego hasRole('ADMIN').
+                .build();
+    }
+}
+` },
+{ id: 'filter', g: 'Seguridad (JWT)', name: 'JwtAuthenticationFilter.java', path: 'security/', intro: 'Se ejecuta antes que cualquier controlador, una vez por petición. Solo identifica al usuario: no decide permisos.', src: `
+@@class Clase
+@Component ¦ Spring lo crea y SecurityConfig lo coloca en la cadena de filtros.
+public class JwtAuthenticationFilter extends OncePerRequestFilter { ¦ OncePerRequestFilter garantiza que corre exactamente una vez por petición.
+    private static final String BEARER_PREFIX = "Bearer "; ¦ El estándar para enviar tokens: Authorization: Bearer <token>
+@@header Leer la cabecera
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+            FilterChain filterChain) throws ServletException, IOException {
+        String header = request.getHeader(HttpHeaders.AUTHORIZATION); ¦ Lee la cabecera Authorization de la petición.
+        if (header != null && header.startsWith(BEARER_PREFIX)) { ¦ Solo actúa si hay cabecera y empieza con "Bearer ". Si no, salta directo al final: la petición sigue como anónima.
+            String token = header.substring(BEARER_PREFIX.length()); ¦ Quita el prefijo y se queda con el token.
+@@verify Verificar y autenticar
+            try {
+                String username = jwtService.extractUsername(token); ¦ Verifica firma y vencimiento; devuelve el dueño del token.
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username); ¦ Trae de la base al usuario con sus roles actuales.
+                UsernamePasswordAuthenticationToken authentication =
+                        UsernamePasswordAuthenticationToken.authenticated(
+                                userDetails, null, userDetails.getAuthorities()); ¦ Crea el objeto "usuario ya autenticado" con sus roles. El null es la contraseña: no hace falta, el token ya probó quién es.
+                SecurityContextHolder.getContext().setAuthentication(authentication); ¦ Lo guarda en el contexto de seguridad de esta petición. De aquí lo leen las reglas, @PreAuthorize y el parámetro Authentication del controlador.
+@@catch Token inválido
+            } catch (JwtException | IllegalArgumentException | UsernameNotFoundException e) { ¦ Token falso, vencido, mal formado o de un usuario borrado.
+                // la petición sigue como anónima ¦ No responde error aquí: el filtro solo identifica. Las reglas de seguridad responderán 401.
+            }
+        }
+@@next Continuar la cadena
+        filterChain.doFilter(request, response); ¦ Siempre se llama: deja pasar la petición al siguiente filtro. Quien decide si entra son las reglas de SecurityConfig.
+    }
+}
+` },
+{ id: 'seccfg', g: 'Seguridad (JWT)', name: 'SecurityConfig.java', path: 'security/', intro: 'Las reglas: qué rutas son públicas, qué pasa sin token y cómo se guardan las contraseñas.', src: `
+@@ann Anotaciones
+@Configuration
+@EnableMethodSecurity ¦ Activa @PreAuthorize. Sin esta línea, @PreAuthorize se ignora en silencio y cualquiera podría cambiar estados.
+@EnableConfigurationProperties(JwtProperties.class) ¦ Registra JwtProperties para que reciba jwt.secret y jwt.expiration.
+public class SecurityConfig {
+@@chain Cadena de filtros y reglas
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtFilter)
+            throws Exception {
+        http
+                .csrf(csrf -> csrf.disable()) ¦ CSRF protege aplicaciones que usan cookies de sesión. Aquí no hay cookies: cada petición lleva su token, así que no aplica.
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) ¦ No se crean sesiones en el servidor. Cada petición se identifica sola con su token.
+                .authorizeHttpRequests(rules -> rules
+                        .requestMatchers(ApiPaths.V1 + "/auth/login", "/error").permitAll() ¦ Rutas públicas: nadie tiene token antes de iniciar sesión.
+                        .anyRequest().authenticated()) ¦ Todo lo demás exige estar autenticado. Una ruta nueva nace protegida por defecto.
+                .exceptionHandling(errors -> errors
+                        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))) ¦ Si no hay autenticación, responde 401 (por defecto Spring respondería 403). 401 = no sé quién eres.
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class); ¦ Coloca nuestro filtro JWT antes del filtro de login estándar, para que el usuario ya esté identificado cuando se evalúan las reglas.
+        return http.build();
+    }
+@@beans AuthenticationManager y BCrypt
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager(); ¦ Expone el componente que comprueba usuario y contraseña. Lo usa AuthService en el login.
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(); ¦ BCrypt: lento a propósito y con una "sal" distinta por contraseña. Aunque roben la base, no obtienen las contraseñas.
+    }
+}
+` },
+{ id: 'auth', g: 'Seguridad (JWT)', name: 'AuthController + AuthService', path: 'controller/ y service/', intro: 'El login: cambia usuario y contraseña por un token.', src: `
+@@ctl AuthController
+@RestController
+@RequestMapping(ApiPaths.V1 + "/auth") ¦ Prefijo de la clase: /api/v1/auth
+public class AuthController {
+    @PostMapping("/login")
+    public TokenResponse login(@Valid @RequestBody LoginRequest request) { ¦ @RequestBody convierte el JSON en LoginRequest; @Valid exige username y password no vacíos.
+        return authService.login(request); ¦ El controlador solo traduce HTTP: delega en el servicio.
+    }
+}
+@@svc AuthService
+@Service
+public class AuthService {
+    public TokenResponse login(LoginRequest request) {
+        Authentication authentication = authenticationManager.authenticate( ¦ Pide a Spring Security que compruebe las credenciales.
+                UsernamePasswordAuthenticationToken.unauthenticated(request.username(), request.password())); ¦ Por dentro llama a CustomUserDetailsService (lee al usuario de la base) y compara la contraseña con el hash usando BCrypt. Si falla lanza BadCredentialsException.
+        return new TokenResponse(jwtService.generateToken(authentication.getName())); ¦ Credenciales correctas: firma un token a nombre de ese usuario y lo devuelve.
+    }
+}
+` },
+{ id: 'catctl', g: 'Categorías', name: 'CategoryController.java', path: 'controller/', intro: 'Dos operaciones: listar y crear categorías.', src: `
+@@class Clase
+@RestController ¦ Lo que devuelven los métodos se convierte a JSON.
+@RequestMapping(ApiPaths.V1 + "/categories") ¦ Prefijo común: /api/v1/categories. ApiPaths.V1 guarda "/api/v1" en un solo lugar.
+public class CategoryController {
+    private final CategoryService categoryService;
+    public CategoryController(CategoryService categoryService) { ¦ Inyección por constructor: el controlador solo conoce al servicio, nunca al repositorio.
+        this.categoryService = categoryService;
+    }
+@@list GET /categories
+    @GetMapping
+    public List<CategoryResponse> findAll() { ¦ Devuelve DTO, no entidades. Sin anotación de rol: basta con tener token.
+        return categoryService.findAll();
+    }
+@@create POST /categories
+    @PostMapping
+    @PreAuthorize("hasRole('ADMIN')") ¦ Solo entra quien tenga ROLE_ADMIN. Si no, 403 y el método no se ejecuta.
+    @ResponseStatus(HttpStatus.CREATED) ¦ Responde 201 en vez de 200: se creó un recurso.
+    public CategoryResponse create(@Valid @RequestBody CategoryRequest request) { ¦ @RequestBody: JSON a CategoryRequest. @Valid: revisa @NotBlank y @Size antes de entrar al método.
+        return categoryService.create(request);
+    }
+}
+` },
+{ id: 'catsvc', g: 'Categorías', name: 'CategoryService.java', path: 'service/', intro: 'Reglas de las categorías. La única regla: no puede haber dos con el mismo nombre.', src: `
+@@class Clase
+@Service
+@Transactional(readOnly = true) ¦ Todos los métodos corren en una transacción de solo lectura, salvo los que digan lo contrario.
+public class CategoryService {
+@@list findAll
+    public List<CategoryResponse> findAll() {
+        return categoryRepository.findAllByOrderByNameAsc().stream() ¦ Lista ordenada por nombre: toda lista lleva un orden definido.
+                .map(CategoryResponse::from) ¦ Convierte cada entidad en su DTO dentro de la transacción.
+                .toList();
+    }
+@@create create
+    @Transactional ¦ Este método escribe: si lanza una excepción, todo lo que hizo se deshace.
+    public CategoryResponse create(CategoryRequest request) {
+        if (categoryRepository.existsByNameIgnoreCase(request.name())) { ¦ ¿Ya existe una con ese nombre, sin distinguir mayúsculas?
+            throw new DuplicateResourceException("Ya existe la categoría " + request.name()); ¦ Excepción del dominio. El servicio no sabe de HTTP: GlobalExceptionHandler la convierte en 409.
+        }
+        Category category = categoryRepository.save(new Category(request.name(), request.description())); ¦ INSERT en categories. La auditoría llena created_at y updated_at; active nace en true.
+        return CategoryResponse.from(category);
+    }
+}
+` },
+{ id: 'catrepo', g: 'Categorías', name: 'CategoryRepository.java', path: 'repository/', intro: 'Solo una interfaz: Spring Data genera la implementación y el SQL a partir del nombre de los métodos.', src: `
+@@all Repositorio
+public interface CategoryRepository extends JpaRepository<Category, Long> { ¦ JpaRepository ya trae save, findById, count, deleteAll... Category es la entidad y Long el tipo de su id.
+    boolean existsByNameIgnoreCase(String name); ¦ Spring lee el nombre: existe alguna WHERE lower(name) = lower(?).
+    List<Category> findAllByOrderByNameAsc(); ¦ SELECT ... ORDER BY name ASC.
+}
+` },
+{ id: 'tktctl', g: 'Tickets', name: 'TicketController.java', path: 'controller/', intro: 'Cuatro operaciones sobre tickets. Cada método llama a un solo método del servicio.', src: `
+@@class Clase
+@RestController
+@RequestMapping(ApiPaths.V1 + "/tickets") ¦ Prefijo común: /api/v1/tickets
+public class TicketController {
+@@list GET /tickets
+    @GetMapping
+    public PageResponse<TicketResponse> findAll(
+            @RequestParam(required = false) TicketStatus status, ¦ Filtro opcional ?status=OPEN. Al ser un enum, un valor desconocido responde 400 sin escribir código.
+            @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) { ¦ Spring arma el Pageable con ?page=&size=&sort=. Si el cliente no envía nada: página 0, 20 por página, los más nuevos primero.
+        return ticketService.findAll(status, pageable);
+    }
+@@get GET /tickets/{id}
+    @GetMapping("/{id}")
+    public TicketResponse findById(@PathVariable Long id) { ¦ @PathVariable toma el {id} de la ruta y lo convierte a Long.
+        return ticketService.findById(id);
+    }
+@@create POST /tickets
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public TicketResponse create(@Valid @RequestBody TicketRequest request, Authentication authentication) { ¦ Authentication es el usuario que el filtro JWT dejó en el contexto.
+        return ticketService.create(request, authentication.getName()); ¦ El creador sale del token, nunca del cuerpo: nadie puede crear un ticket a nombre de otro.
+    }
+@@status PUT /tickets/{id}/status
+    @PutMapping("/{id}/status")
+    @PreAuthorize("hasRole('ADMIN')") ¦ Solo un administrador cambia estados. Con otro rol: 403.
+    public TicketResponse changeStatus(@PathVariable Long id, @Valid @RequestBody ChangeStatusRequest request) { ¦ El cuerpo trae el estado nuevo y la versión que el cliente leyó.
+        return ticketService.changeStatus(id, request);
+    }
+}
+` },
+{ id: 'tktsvc', g: 'Tickets', name: 'TicketService.java', path: 'service/', intro: 'Reglas del negocio de los tickets y sus transacciones. No sabe nada de HTTP.', src: `
+@@class Clase
+@Service
+@Transactional(readOnly = true) ¦ Por defecto, transacción de solo lectura en cada método.
+public class TicketService {
+    private static final Set<String> SORTABLE_FIELDS = Set.of("createdAt", "updatedAt", "title", "status"); ¦ Lista blanca: los únicos atributos por los que el cliente puede ordenar.
+@@list findAll
+    public PageResponse<TicketResponse> findAll(TicketStatus status, Pageable pageable) {
+        validateSort(pageable); ¦ Primero revisa que el orden pedido esté permitido.
+        Page<Ticket> tickets = (status == null)
+                ? ticketRepository.findAll(pageable) ¦ Sin filtro: todos los tickets de esa página.
+                : ticketRepository.findByStatus(status, pageable); ¦ Con filtro: solo los de ese estado.
+        return PageResponse.from(tickets.map(TicketResponse::from)); ¦ Convierte cada ticket a DTO conservando los datos de la página (número, tamaño, total).
+    }
+@@get findById
+    public TicketResponse findById(Long id) {
+        return TicketResponse.from(findTicket(id)); ¦ Busca y convierte a DTO dentro de la transacción.
+    }
+@@create create
+    @Transactional ¦ Escribe: si algo falla, no queda nada a medias.
+    public TicketResponse create(TicketRequest request, String username) {
+        Category category = categoryRepository.findById(request.categoryId())
+                .orElseThrow(() -> new InvalidRequestException("No existe la categoría " + request.categoryId())); ¦ El JSON era válido de forma, pero el categoryId no existe: 400.
+        User creator = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("No existe el usuario " + username)); ¦ El dueño del token, buscado en la base.
+        Ticket ticket = new Ticket(
+                request.title(), request.description(), request.priority(), category, creator); ¦ El constructor fija el estado OPEN: el cliente no decide eso.
+        return TicketResponse.from(ticketRepository.save(ticket)); ¦ INSERT. Hibernate pone version en 0 y la auditoría llena las fechas.
+    }
+@@status changeStatus
+    @Transactional
+    public TicketResponse changeStatus(Long id, ChangeStatusRequest request) {
+        Ticket ticket = findTicket(id); ¦ Si no existe: 404.
+        if (!Objects.equals(ticket.getVersion(), request.version())) { ¦ Primera defensa del bloqueo optimista: ¿la versión que envió el cliente sigue siendo la actual?
+            throw new ConflictException("El ticket " + id
+                    + " fue modificado por otra persona. Vuelve a cargarlo e inténtalo de nuevo"); ¦ No coincide: otra persona lo cambió después de que este cliente lo leyó. 409.
+        }
+        ticket.changeStatus(request.status()); ¦ Método con nombre de negocio en la entidad, no un setter.
+        return TicketResponse.from(ticketRepository.saveAndFlush(ticket)); ¦ saveAndFlush envía el UPDATE ahora mismo, así la respuesta ya trae la versión y la fecha nuevas. Segunda defensa: el UPDATE lleva WHERE version = ?.
+    }
+@@find findTicket
+    private Ticket findTicket(Long id) {
+        return ticketRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("No existe el ticket " + id)); ¦ Optional vacío se convierte en excepción del dominio; el manejador global la traduce a 404.
+    }
+@@sort validateSort
+    private void validateSort(Pageable pageable) {
+        for (Sort.Order order : pageable.getSort()) { ¦ Recorre cada atributo de ?sort=
+            if (!SORTABLE_FIELDS.contains(order.getProperty())) {
+                throw new InvalidRequestException("No se puede ordenar por " + order.getProperty()); ¦ El parámetro sort viene del cliente. Sin este filtro, un nombre mal escrito causaría un 500 o se ordenaría por columnas sin índice.
+            }
+        }
+    }
+}
+` },
+{ id: 'tktrepo', g: 'Tickets', name: 'TicketRepository.java', path: 'repository/', intro: 'Acceso a la tabla tickets. Trae la categoría y el creador en la misma consulta.', src: `
+@@all Repositorio
+public interface TicketRepository extends JpaRepository<Ticket, Long> {
+    @Override
+    @EntityGraph(attributePaths = {"category", "creator"}) ¦ Trae la categoría y el creador con un JOIN en la misma consulta. Sin esto, listar 20 tickets haría hasta 40 consultas extra (problema N+1).
+    Optional<Ticket> findById(Long id); ¦ Optional obliga a manejar el caso "no existe".
+
+    @Override
+    @EntityGraph(attributePaths = {"category", "creator"})
+    Page<Ticket> findAll(Pageable pageable); ¦ Pageable lleva página, tamaño y orden. Page devuelve los elementos más el total: Spring ejecuta además un SELECT count(*).
+
+    @EntityGraph(attributePaths = {"category", "creator"})
+    Page<Ticket> findByStatus(TicketStatus status, Pageable pageable); ¦ Spring lee el nombre del método: WHERE status = ? con LIMIT, OFFSET y ORDER BY.
+}
+` },
+{ id: 'ticket', g: 'Tickets', name: 'Ticket.java + AuditableEntity', path: 'model/', intro: 'La entidad: una clase Java que representa la tabla tickets.', src: `
+@@fields Columnas
+@Entity
+@Table(name = "tickets") ¦ Esta clase corresponde a la tabla tickets.
+public class Ticket extends AuditableEntity { ¦ Hereda created_at y updated_at automáticos.
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) ¦ El id lo genera la base (columna IDENTITY).
+    private Long id;
+    @Column(nullable = false, length = 150)
+    private String title;
+    @Enumerated(EnumType.STRING) ¦ Guarda el nombre ('OPEN'), no la posición. Con ORDINAL, insertar un estado en medio cambiaría el significado de los números guardados.
+    @Column(nullable = false, length = 20)
+    private TicketStatus status;
+@@rel Relaciones
+    @ManyToOne(fetch = FetchType.LAZY, optional = false) ¦ Muchos tickets, una categoría. LAZY: solo se trae de la base cuando se usa (o cuando @EntityGraph lo pide).
+    @JoinColumn(name = "category_id", nullable = false) ¦ La clave foránea en la tabla.
+    private Category category;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "creator_id", nullable = false, updatable = false) ¦ updatable = false: el creador de un ticket no cambia nunca.
+    private User creator;
+@@version Bloqueo optimista
+    @Version ¦ Hibernate suma 1 en cada UPDATE y agrega WHERE version = ?. Si otro ya la cambió, el UPDATE no encuentra la fila y se lanza una excepción que termina en 409.
+    @Column(nullable = false)
+    private Long version;
+@@ctor Constructor y cambio de estado
+    protected Ticket() { } ¦ JPA exige un constructor vacío; protected para que nadie más lo use.
+    public Ticket(String title, String description, Priority priority, Category category, User creator) {
+        ... ¦ Un ticket nace completo: no hay setters.
+        this.status = TicketStatus.OPEN; ¦ Todo ticket nace OPEN.
+    }
+    public void changeStatus(TicketStatus newStatus) { ¦ Método con nombre de negocio. Aquí vivirán las reglas de la Fase 2 (por ejemplo, no reabrir un ticket cerrado).
+        this.status = newStatus;
+    }
+@@audit AuditableEntity
+@MappedSuperclass ¦ No es una tabla: sus columnas se copian a cada entidad que la extiende.
+@EntityListeners(AuditingEntityListener.class) ¦ Spring Data escucha cada INSERT y UPDATE.
+public abstract class AuditableEntity {
+    @CreatedDate ¦ Se llena una sola vez, al insertar.
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Instant createdAt;
+    @LastModifiedDate ¦ Se actualiza en cada cambio. Nadie puede olvidarse de hacerlo a mano.
+    @Column(name = "updated_at", nullable = false)
+    private Instant updatedAt;
+}
+` },
+{ id: 'cmtctl', g: 'Comentarios', name: 'CommentController.java', path: 'controller/', intro: 'Los comentarios cuelgan de su ticket: /tickets/{ticketId}/comments.', src: `
+@@class Clase
+@RestController
+@RequestMapping(ApiPaths.V1 + "/tickets/{ticketId}/comments") ¦ Recurso hijo: la ruta dice de qué ticket son los comentarios.
+public class CommentController {
+@@list GET comentarios
+    @GetMapping
+    public List<CommentResponse> findByTicket(@PathVariable Long ticketId) { ¦ ticketId viene de la ruta.
+        return commentService.findByTicket(ticketId);
+    }
+@@create POST comentario
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public CommentResponse create(@PathVariable Long ticketId, @Valid @RequestBody CommentRequest request,
+            Authentication authentication) { ¦ Tres fuentes: el ticket de la ruta, el texto del cuerpo y el autor del token.
+        return commentService.create(ticketId, request, authentication.getName()); ¦ El autor es el dueño del token.
+    }
+}
+` },
+{ id: 'cmtsvc', g: 'Comentarios', name: 'CommentService.java', path: 'service/', intro: 'Reglas de los comentarios: el ticket tiene que existir.', src: `
+@@list findByTicket
+    public List<CommentResponse> findByTicket(Long ticketId) {
+        if (!ticketRepository.existsById(ticketId)) { ¦ Sin esta comprobación, pedir los comentarios de un ticket inexistente devolvería una lista vacía con 200.
+            throw new ResourceNotFoundException("No existe el ticket " + ticketId); ¦ 404.
+        }
+        return commentRepository.findByTicketIdOrderByCreatedAtAsc(ticketId).stream() ¦ Los comentarios del ticket, del más antiguo al más nuevo.
+                .map(CommentResponse::from)
+                .toList();
+    }
+@@create create
+    @Transactional
+    public CommentResponse create(Long ticketId, CommentRequest request, String username) {
+        Ticket ticket = ticketRepository.findById(ticketId)
+                .orElseThrow(() -> new ResourceNotFoundException("No existe el ticket " + ticketId)); ¦ No se puede comentar un ticket que no existe: 404.
+        User author = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("No existe el usuario " + username));
+        Comment comment = commentRepository.save(new Comment(request.content(), ticket, author)); ¦ INSERT en comments con sus dos claves foráneas.
+        return CommentResponse.from(comment);
+    }
+@@repo CommentRepository
+public interface CommentRepository extends JpaRepository<Comment, Long> {
+    @EntityGraph(attributePaths = "author") ¦ Trae al autor en la misma consulta (evita N+1).
+    List<Comment> findByTicketIdOrderByCreatedAtAsc(Long ticketId); ¦ WHERE ticket_id = ? ORDER BY created_at ASC
+}
+` },
+{ id: 'dto', g: 'DTO y errores', name: 'DTO (records)', path: 'dto/', intro: 'Un DTO define la forma exacta del JSON. Nunca se envían ni reciben entidades.', src: `
+@@ticketreq TicketRequest (entra)
+public record TicketRequest(
+        @NotBlank @Size(max = 150) String title, ¦ No puede ser nulo, vacío ni solo espacios; máximo 150 como la columna.
+        @NotBlank @Size(max = 2000) String description,
+        @NotNull Priority priority, ¦ Enum: LOW, MEDIUM o HIGH. Otro texto falla al leer el JSON (400).
+        @NotNull Long categoryId) { ¦ Solo los campos que el cliente puede decidir. No hay status, creator ni version.
+}
+@@ticketres TicketResponse (sale)
+public record TicketResponse(Long id, String title, String description, TicketStatus status,
+        Priority priority, String category, String creator, Long version,
+        Instant createdAt, Instant updatedAt) { ¦ Los 10 atributos del ticket. category y creator salen como texto, no como objetos anidados.
+    public static TicketResponse from(Ticket ticket) { ¦ Método de fábrica: la conversión entidad a DTO en un solo lugar.
+        return new TicketResponse(ticket.getId(), ..., ticket.getCategory().getName(),
+                ticket.getCreator().getUsername(), ticket.getVersion(), ...); ¦ Toca relaciones LAZY: por eso se llama dentro de la transacción del servicio.
+    }
+}
+@@page PageResponse (sale)
+public record PageResponse<T>(List<T> content, int page, int size, long totalElements, int totalPages) { ¦ Forma estable de una página: 5 campos nuestros, en vez del JSON interno de Spring que puede cambiar entre versiones.
+    public static <T> PageResponse<T> from(Page<T> page) {
+        return new PageResponse<>(page.getContent(), page.getNumber(), page.getSize(),
+                page.getTotalElements(), page.getTotalPages()); ¦ getNumber() empieza en 0: convención de Spring Data (OFFSET = page × size).
+    }
+}
+@@status ChangeStatusRequest (entra)
+public record ChangeStatusRequest(
+        @NotNull TicketStatus status, ¦ El estado nuevo.
+        @NotNull Long version) { ¦ La versión que el cliente recibió al leer el ticket. Es la base del bloqueo optimista.
+}
+@@comment CommentRequest y CommentResponse
+public record CommentRequest(@NotBlank @Size(max = 1000) String content) { } ¦ Solo el texto: el autor y el ticket no vienen en el cuerpo.
+public record CommentResponse(Long id, String content, String author, Long ticketId, Instant createdAt) { ¦ Los 5 atributos del comentario.
+}
+@@category CategoryRequest y CategoryResponse
+public record CategoryRequest(
+        @NotBlank @Size(max = 50) String name,
+        @NotBlank @Size(max = 255) String description) { }
+public record CategoryResponse(Long id, String name, String description, boolean active) { ¦ Los 4 atributos de la categoría.
+}
+` },
+{ id: 'handler', g: 'DTO y errores', name: 'GlobalExceptionHandler.java', path: 'exception/', intro: 'Un solo lugar convierte las excepciones de todas las capas en respuestas JSON con el código correcto.', src: `
+@@domain Excepciones del dominio
+@RestControllerAdvice ¦ Atiende las excepciones de todos los controladores.
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler { ¦ La clase base ya convierte los errores propios de Spring (JSON mal formado, enum desconocido) en 400.
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ProblemDetail handleNotFound(ResourceNotFoundException e) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, e.getMessage()); ¦ 404. ProblemDetail es el formato estándar de errores HTTP (RFC 9457): status, title, detail, instance.
+    }
+    @ExceptionHandler({DuplicateResourceException.class, ConflictException.class})
+    public ProblemDetail handleConflict(RuntimeException e) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, e.getMessage()); ¦ 409: ya existe, o cambió desde que se leyó.
+    }
+    @ExceptionHandler(InvalidRequestException.class)
+    public ProblemDetail handleInvalidRequest(InvalidRequestException e) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage()); ¦ 400: datos válidos de forma pero no de fondo.
+    }
+@@lock Choque simultáneo
+    @ExceptionHandler(ObjectOptimisticLockingFailureException.class) ¦ La lanza Hibernate cuando el UPDATE ... WHERE version = ? no encuentra la fila: dos peticiones en el mismo instante.
+    public ProblemDetail handleOptimisticLock(ObjectOptimisticLockingFailureException e) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT,
+                "El recurso fue modificado por otra persona. Vuelve a cargarlo e inténtalo de nuevo");
+    }
+@@creds Login incorrecto
+    @ExceptionHandler(BadCredentialsException.class)
+    public ProblemDetail handleBadCredentials(BadCredentialsException e) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, "Usuario o contraseña incorrectos"); ¦ Mismo mensaje si el usuario no existe o si la contraseña es incorrecta: no se revela cuál de los dos falló.
+    }
+@@valid Errores de @Valid
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, ...) {
+        Map<String, String> errors = new LinkedHashMap<>();
+        for (FieldError error : ex.getBindingResult().getFieldErrors()) {
+            errors.putIfAbsent(error.getField(), error.getDefaultMessage()); ¦ Junta qué campo falló y por qué.
+        }
+        ProblemDetail problem = ex.getBody();
+        problem.setDetail("Hay campos inválidos");
+        problem.setProperty("errors", errors); ¦ Agrega "errors" al JSON: el cliente sabe exactamente qué corregir.
+        return handleExceptionInternal(ex, problem, headers, status, request);
+    }
+}
+` }
+];
+var FILE = {};
+FILES.forEach(function (f) { f.blocks = parse(f.src); FILE[f.id] = f; });
+
+function renderBlock(fileId, key) {
+  var f = FILE[fileId], b = f.blocks.filter(function (x) { return x.k === key; })[0];
+  var box = h('div', { class: 'blk', id: 'b-' + fileId + '-' + key },
+    h('div', { class: 'bh' }, h('b', { text: f.name }), h('span', { text: b.title })));
+  b.lines.forEach(function (ln) {
+    var has = !!ln[1];
+    var row = h('div', { class: 'row ' + (has ? 'has' : 'plain'), tabindex: has ? '0' : null },
+      h('pre', { text: ln[0] || ' ' }), h('div', { class: 'why' }, h('span', null, rich(ln[1]))));
+    if (has) {
+      var tog = function () { row.classList.toggle('open'); };
+      row.addEventListener('click', tog);
+      row.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); tog(); } });
+    }
+    box.appendChild(row);
+  });
+  return box;
+}
+
+/* ---------- flujos ---------- */
+var LAYERS = [['client', 'Cliente'], ['filter', 'Filtro JWT'], ['rules', 'Reglas de seguridad'], ['ctl', 'Controlador'], ['svc', 'Servicio'], ['repo', 'Repositorio'], ['db', 'PostgreSQL'], ['out', 'Respuesta JSON']];
+function S(layer, f, b, t, code) { return { layer: layer, f: f, b: b, t: t, code: code }; }
+function auth(user) {
+  var role = user === 'admin' ? 'ROLE_ADMIN' : 'ROLE_USER';
+  return [
+    S('filter', 'filter', 'header', 'El filtro lee la cabecera `Authorization: Bearer <token de ' + user + '>` y le quita el prefijo.'),
+    S('filter', 'jwtservice', 'extract', 'Comprueba la firma con `JWT_SECRET` y que el token no haya vencido. Devuelve el dueño: `' + user + '`.'),
+    S('filter', 'uds', 'all', 'Busca a `' + user + '` en la tabla `users` y lee sus roles. Aquí se cumple "usuarios desde base de datos".', 'SELECT * FROM users WHERE username = \'' + user + '\';\nSELECT r.* FROM user_roles ur JOIN roles r ON r.id = ur.role_id WHERE ur.user_id = ?;'),
+    S('filter', 'filter', 'verify', 'Guarda en el contexto de seguridad que la petición es de `' + user + '` con el rol `' + role + '`.'),
+    S('rules', 'seccfg', 'chain', '`anyRequest().authenticated()`: la petición está autenticada, así que pasa al controlador.')
+  ];
+}
+function noAuth() {
+  return [
+    S('filter', 'filter', 'header', 'No hay cabecera `Authorization`: el `if` no se cumple y no se autentica a nadie.'),
+    S('filter', 'filter', 'next', 'El filtro no responde error. Deja seguir la petición como anónima.'),
+    S('rules', 'seccfg', 'chain', '`anyRequest().authenticated()` falla porque nadie está autenticado. `HttpStatusEntryPoint` responde 401 y el controlador nunca se ejecuta.')
+  ];
+}
+var H_ANA = 'Authorization: Bearer <token de ana>', H_ADM = 'Authorization: Bearer <token de admin>', CT = 'Content-Type: application/json';
+var TICKET_JSON = '{\n  "id": 1,\n  "title": "La PC no enciende",\n  "description": "Presiono el botón y no pasa nada",\n  "status": "OPEN",\n  "priority": "HIGH",\n  "category": "Hardware",\n  "creator": "ana",\n  "version": 0,\n  "createdAt": "2026-10-08T16:26:07.932101Z",\n  "updatedAt": "2026-10-08T16:26:07.932101Z"\n}';
+var FORBIDDEN = '(403 Forbidden. Lo responde Spring Security; el método del controlador no se ejecuta)';
+
+var OPS = [
+{ id: 'login', m: 'POST', p: '/auth/login', aux: true, sc: [
+  { name: 'Credenciales correctas', code: 200, cp: 'CP-01', req: [CT], body: '{"username": "admin", "password": "admin123"}', res: '{"token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIs..."}', steps: [
+    S('filter', 'filter', 'header', 'Todavía no hay token: no hay cabecera `Authorization` y el filtro no hace nada.'),
+    S('rules', 'seccfg', 'chain', '`/api/v1/auth/login` está en `permitAll()`: es la única ruta pública de la API.'),
+    S('ctl', 'auth', 'ctl', '`@Valid` comprueba que `username` y `password` no estén vacíos y delega en el servicio.'),
+    S('svc', 'auth', 'svc', 'El servicio pide a Spring Security que compruebe las credenciales.'),
+    S('repo', 'uds', 'all', 'Spring Security llama a `loadUserByUsername`: lee al usuario y su hash desde la base.', 'SELECT * FROM users WHERE username = \'admin\';'),
+    S('svc', 'seccfg', 'beans', 'BCrypt compara `admin123` con el hash guardado. Coinciden.'),
+    S('svc', 'jwtservice', 'generate', 'Se firma un token con `sub = admin` que vence en 60 minutos.'),
+    S('out', null, null, 'Responde 200 con el token. El cliente lo enviará en cada petición siguiente.')
+  ] },
+  { name: 'Contraseña incorrecta', code: 401, cp: 'CP-02', req: [CT], body: '{"username": "admin", "password": "mala"}', res: '{\n  "detail": "Usuario o contraseña incorrectos",\n  "instance": "/api/v1/auth/login",\n  "status": 401,\n  "title": "Unauthorized"\n}', steps: [
+    S('rules', 'seccfg', 'chain', 'Ruta pública: pasa.'),
+    S('ctl', 'auth', 'ctl', 'El cuerpo es válido de forma; delega en el servicio.'),
+    S('svc', 'auth', 'svc', 'BCrypt compara la contraseña con el hash y no coincide: `authenticate` lanza `BadCredentialsException`.'),
+    S('out', 'handler', 'creds', 'El manejador global la convierte en 401 con un mensaje que no revela si falló el usuario o la contraseña.')
+  ] }
+] },
+{ id: 'cat-list', m: 'GET', p: '/categories', sc: [
+  { name: 'Con token', code: 200, cp: 'CP-05', req: [H_ANA], res: '[\n  {"id": 1, "name": "Hardware", "description": "Equipos, monitores, teclados e impresoras", "active": true},\n  {"id": 3, "name": "Redes", "description": "Internet, wifi y acceso a servidores", "active": true},\n  {"id": 2, "name": "Software", "description": "Programas, licencias e instalaciones", "active": true}\n]', steps: auth('ana').concat([
+    S('ctl', 'catctl', 'list', 'No pide un rol: basta con estar autenticado. Llama al servicio.'),
+    S('svc', 'catsvc', 'list', 'Abre una transacción de solo lectura y pide la lista ordenada.'),
+    S('repo', 'catrepo', 'all', 'Spring Data genera la consulta a partir del nombre del método.'),
+    S('db', null, null, 'PostgreSQL devuelve las filas.', 'SELECT * FROM categories ORDER BY name ASC;'),
+    S('svc', 'dto', 'category', 'Cada entidad `Category` se convierte en `CategoryResponse` (4 atributos).'),
+    S('out', null, null, 'Jackson convierte la lista a JSON. Responde 200.')
+  ]) },
+  { name: 'Sin token', code: 401, cp: 'CP-06', req: [], res: '(401 Unauthorized, sin cuerpo)', steps: noAuth() }
+] },
+{ id: 'cat-create', m: 'POST', p: '/categories', sc: [
+  { name: 'Como ADMIN', code: 201, cp: 'CP-07', req: [H_ADM, CT], body: '{"name": "Accesos", "description": "Cuentas, contraseñas y permisos"}', res: '{"id": 4, "name": "Accesos", "description": "Cuentas, contraseñas y permisos", "active": true}', steps: auth('admin').concat([
+    S('ctl', 'catctl', 'create', '`@Valid` pasa. `@PreAuthorize` comprueba el rol: `admin` tiene `ROLE_ADMIN`, entra.'),
+    S('svc', 'catsvc', 'create', 'Comprueba que no exista una categoría con ese nombre y guarda.'),
+    S('db', null, null, 'Dos consultas: la comprobación y el INSERT.', 'SELECT count(*) > 0 FROM categories WHERE lower(name) = lower(\'Accesos\');\nINSERT INTO categories (name, description, active, created_at, updated_at) VALUES (...);'),
+    S('out', 'dto', 'category', 'Devuelve la categoría creada con `@ResponseStatus(CREATED)`: 201.')
+  ]) },
+  { name: 'Nombre vacío', code: 400, cp: 'CP-08', req: [H_ADM, CT], body: '{"name": "", "description": "Sin nombre"}', res: '{\n  "detail": "Hay campos inválidos",\n  "instance": "/api/v1/categories",\n  "status": 400,\n  "title": "Bad Request",\n  "errors": {"name": "must not be blank"}\n}', steps: auth('admin').concat([
+    S('ctl', 'dto', 'category', '`@Valid` revisa el `CategoryRequest`: `name` tiene `@NotBlank` y llegó vacío. Se lanza `MethodArgumentNotValidException` antes de entrar al método.'),
+    S('out', 'handler', 'valid', 'El manejador global agrega `errors` con el campo que falló. El servicio y la base nunca se tocan.')
+  ]) },
+  { name: 'Como USER', code: 403, req: [H_ANA, CT], body: '{"name": "Accesos", "description": "Cuentas y permisos"}', res: FORBIDDEN, steps: auth('ana').concat([
+    S('ctl', 'catctl', 'create', '`ana` está autenticada, pero `@PreAuthorize("hasRole(\'ADMIN\')")` busca `ROLE_ADMIN` y ella tiene `ROLE_USER`. Spring Security responde 403: sé quién eres, pero no tienes permiso.')
+  ]) },
+  { name: 'Nombre repetido', code: 409, req: [H_ADM, CT], body: '{"name": "hardware", "description": "Otra vez"}', res: '{\n  "detail": "Ya existe la categoría hardware",\n  "instance": "/api/v1/categories",\n  "status": 409,\n  "title": "Conflict"\n}', steps: auth('admin').concat([
+    S('ctl', 'catctl', 'create', 'Validación y rol correctos: entra.'),
+    S('svc', 'catsvc', 'create', '`existsByNameIgnoreCase` devuelve `true` (ya existe "Hardware"). Lanza `DuplicateResourceException` y no guarda.'),
+    S('out', 'handler', 'domain', 'El manejador global la convierte en 409.')
+  ]) }
+] },
+{ id: 'tkt-list', m: 'GET', p: '/tickets', sc: [
+  { name: 'Primera página', code: 200, cp: 'CP-09', req: [H_ANA], res: '{\n  "content": [ { "id": 1, "title": "La PC no enciende", "status": "OPEN", ... } ],\n  "page": 0,\n  "size": 20,\n  "totalElements": 1,\n  "totalPages": 1\n}', steps: auth('ana').concat([
+    S('ctl', 'tktctl', 'list', 'El cliente no envió `page`, `size` ni `sort`: `@PageableDefault` pone página 0, 20 por página y los más nuevos primero. `status` llega `null`.'),
+    S('svc', 'tktsvc', 'list', 'Valida el orden y, como no hay filtro, pide todos los tickets de esa página.'),
+    S('svc', 'tktsvc', 'sort', '`createdAt` está en la lista blanca: pasa.'),
+    S('repo', 'tktrepo', 'all', '`@EntityGraph` trae categoría y creador con JOIN.'),
+    S('db', null, null, 'Dos consultas: la página y el total.', 'SELECT t.*, c.*, u.* FROM tickets t\n  JOIN categories c ON c.id = t.category_id\n  JOIN users u ON u.id = t.creator_id\n  ORDER BY t.created_at DESC LIMIT 20 OFFSET 0;\nSELECT count(*) FROM tickets;'),
+    S('svc', 'dto', 'page', 'Cada `Ticket` se convierte en `TicketResponse` y la página en `PageResponse`.'),
+    S('out', null, null, 'Responde 200 con la página.')
+  ]) },
+  { name: '?status=CLOSED', code: 200, cp: 'CP-10', req: [H_ANA], q: '?status=CLOSED', res: '{"content": [], "page": 0, "size": 20, "totalElements": 0, "totalPages": 0}', steps: auth('ana').concat([
+    S('ctl', 'tktctl', 'list', 'Spring convierte el texto `CLOSED` al enum `TicketStatus.CLOSED`.'),
+    S('svc', 'tktsvc', 'list', 'Hay filtro: usa `findByStatus`.'),
+    S('db', null, null, 'Ningún ticket está cerrado.', 'SELECT ... FROM tickets t JOIN ... WHERE t.status = \'CLOSED\' ORDER BY t.created_at DESC LIMIT 20 OFFSET 0;'),
+    S('out', 'dto', 'page', 'Página vacía: sigue siendo un 200, no un error.')
+  ]) },
+  { name: '?sort=passwordHash', code: 400, req: [H_ANA], q: '?sort=passwordHash', res: '{\n  "detail": "No se puede ordenar por passwordHash",\n  "instance": "/api/v1/tickets",\n  "status": 400,\n  "title": "Bad Request"\n}', steps: auth('ana').concat([
+    S('ctl', 'tktctl', 'list', 'Spring arma el `Pageable` con el orden pedido.'),
+    S('svc', 'tktsvc', 'sort', '`passwordHash` no está en `SORTABLE_FIELDS`: lanza `InvalidRequestException` sin consultar la base.'),
+    S('out', 'handler', 'domain', 'El manejador global la convierte en 400.')
+  ]) }
+] },
+{ id: 'tkt-get', m: 'GET', p: '/tickets/{id}', sc: [
+  { name: 'El ticket existe', code: 200, cp: 'CP-11', req: [H_ANA], path: '/tickets/1', res: TICKET_JSON, steps: auth('ana').concat([
+    S('ctl', 'tktctl', 'get', '`@PathVariable` convierte el `1` de la ruta en `Long`.'),
+    S('svc', 'tktsvc', 'get', 'Busca el ticket y lo convierte a DTO.'),
+    S('svc', 'tktsvc', 'find', 'El `Optional` trae un ticket.'),
+    S('repo', 'tktrepo', 'all', 'Una sola consulta con JOIN gracias a `@EntityGraph`.'),
+    S('db', null, null, 'PostgreSQL devuelve la fila.', 'SELECT t.*, c.*, u.* FROM tickets t\n  JOIN categories c ON c.id = t.category_id\n  JOIN users u ON u.id = t.creator_id\n  WHERE t.id = 1;'),
+    S('out', 'dto', 'ticketres', 'Responde 200 con los 10 atributos.')
+  ]) },
+  { name: 'No existe', code: 404, cp: 'CP-12', req: [H_ANA], path: '/tickets/999', res: '{\n  "detail": "No existe el ticket 999",\n  "instance": "/api/v1/tickets/999",\n  "status": 404,\n  "title": "Not Found"\n}', steps: auth('ana').concat([
+    S('ctl', 'tktctl', 'get', 'Llama al servicio con el id 999.'),
+    S('svc', 'tktsvc', 'find', 'El `Optional` llega vacío: lanza `ResourceNotFoundException`.'),
+    S('out', 'handler', 'domain', 'Nadie atrapa la excepción hasta el manejador global, que responde 404.')
+  ]) }
+] },
+{ id: 'tkt-create', m: 'POST', p: '/tickets', sc: [
+  { name: 'Datos válidos', code: 201, cp: 'CP-13', req: [H_ANA, CT], body: '{\n  "title": "La PC no enciende",\n  "description": "Presiono el botón y no pasa nada",\n  "priority": "HIGH",\n  "categoryId": 1\n}', res: TICKET_JSON, steps: auth('ana').concat([
+    S('ctl', 'dto', 'ticketreq', 'Jackson convierte el JSON en `TicketRequest` y `@Valid` revisa cada campo. Todo correcto.'),
+    S('ctl', 'tktctl', 'create', 'El controlador saca el username del token (`ana`) y lo pasa al servicio.'),
+    S('svc', 'tktsvc', 'create', 'Se abre la transacción. Busca la categoría y al usuario, crea el ticket y lo guarda.'),
+    S('svc', 'ticket', 'ctor', 'El constructor fija `OPEN`. El JSON enviado no decía status, creator, version ni fechas.'),
+    S('db', null, null, 'Tres consultas dentro de una transacción.', 'SELECT * FROM categories WHERE id = 1;\nSELECT * FROM users WHERE username = \'ana\';\nINSERT INTO tickets (title, description, status, priority, category_id, creator_id, version, created_at, updated_at)\n  VALUES (\'La PC no enciende\', ..., \'OPEN\', \'HIGH\', 1, 2, 0, now, now);'),
+    S('svc', 'ticket', 'audit', 'La auditoría llenó `createdAt` y `updatedAt`; Hibernate puso `version` en 0.'),
+    S('out', 'dto', 'ticketres', 'Se confirma la transacción y responde 201 con el ticket completo.')
+  ]) },
+  { name: 'Título vacío', code: 400, cp: 'CP-14', req: [H_ANA, CT], body: '{"title": "", "description": "x", "priority": "HIGH", "categoryId": 1}', res: '{\n  "detail": "Hay campos inválidos",\n  "instance": "/api/v1/tickets",\n  "status": 400,\n  "title": "Bad Request",\n  "errors": {"title": "must not be blank"}\n}', steps: auth('ana').concat([
+    S('ctl', 'dto', 'ticketreq', '`title` tiene `@NotBlank` y llegó vacío: `@Valid` lanza `MethodArgumentNotValidException`.'),
+    S('out', 'handler', 'valid', 'El manejador arma `errors.title`. No se guarda nada.')
+  ]) },
+  { name: 'Prioridad desconocida', code: 400, req: [H_ANA, CT], body: '{"title": "Sin red", "description": "x", "priority": "URGENT", "categoryId": 1}', res: '{\n  "detail": "Failed to read request",\n  "instance": "/api/v1/tickets",\n  "status": 400,\n  "title": "Bad Request"\n}', steps: auth('ana').concat([
+    S('ctl', 'dto', 'ticketreq', '`URGENT` no existe en el enum `Priority`. Jackson no puede construir el `TicketRequest`: ni siquiera llega a `@Valid`.'),
+    S('out', 'handler', 'domain', 'La clase base `ResponseEntityExceptionHandler` responde 400 con el mensaje genérico "Failed to read request". No lista campos porque el objeto nunca se creó.')
+  ]) },
+  { name: 'Categoría inexistente', code: 400, req: [H_ANA, CT], body: '{"title": "Sin red", "description": "x", "priority": "LOW", "categoryId": 999}', res: '{\n  "detail": "No existe la categoría 999",\n  "instance": "/api/v1/tickets",\n  "status": 400,\n  "title": "Bad Request"\n}', steps: auth('ana').concat([
+    S('ctl', 'tktctl', 'create', 'El cuerpo es válido de forma: `@Valid` pasa.'),
+    S('svc', 'tktsvc', 'create', 'La categoría 999 no existe: lanza `InvalidRequestException`. Es 400 y no 404 porque el error está en los datos enviados, no en la ruta.'),
+    S('out', 'handler', 'domain', 'El manejador global responde 400.')
+  ]) }
+] },
+{ id: 'tkt-status', m: 'PUT', p: '/tickets/{id}/status', sc: [
+  { name: 'ADMIN, versión actual', code: 200, cp: 'CP-15', req: [H_ADM, CT], path: '/tickets/1/status', body: '{"status": "IN_PROGRESS", "version": 0}', res: '{\n  "id": 1,\n  "status": "IN_PROGRESS",\n  "version": 1,\n  "createdAt": "2026-10-08T16:26:07.932101Z",\n  "updatedAt": "2026-10-08T16:31:42.118530Z",\n  ...\n}', steps: auth('admin').concat([
+    S('ctl', 'dto', 'status', '`@Valid` exige estado y versión.'),
+    S('ctl', 'tktctl', 'status', '`@PreAuthorize`: `admin` tiene `ROLE_ADMIN`, entra.'),
+    S('svc', 'tktsvc', 'status', 'Lee el ticket (versión 0) y la compara con la enviada (0): coinciden. Cambia el estado y hace `saveAndFlush`.'),
+    S('svc', 'ticket', 'version', '`@Version` agrega la condición de versión al UPDATE y le suma 1.'),
+    S('db', null, null, 'El UPDATE solo afecta la fila si la versión sigue siendo 0.', 'UPDATE tickets SET status = \'IN_PROGRESS\', version = 1, updated_at = now\n  WHERE id = 1 AND version = 0;'),
+    S('out', 'dto', 'ticketres', 'Responde 200. La versión subió a 1 y `updatedAt` cambió.')
+  ]) },
+  { name: 'Como USER', code: 403, cp: 'CP-16', req: [H_ANA, CT], path: '/tickets/1/status', body: '{"status": "CLOSED", "version": 0}', res: FORBIDDEN, steps: auth('ana').concat([
+    S('ctl', 'tktctl', 'status', '`ana` tiene `ROLE_USER`. `@PreAuthorize("hasRole(\'ADMIN\')")` impide entrar al método: 403. El servicio nunca se llama y el ticket sigue `OPEN`.')
+  ]) },
+  { name: 'Versión antigua', code: 409, cp: 'CP-21', req: [H_ADM, CT], path: '/tickets/1/status', body: '{"status": "CLOSED", "version": 0}', res: '{\n  "detail": "El ticket 1 fue modificado por otra persona. Vuelve a cargarlo e inténtalo de nuevo",\n  "instance": "/api/v1/tickets/1/status",\n  "status": 409,\n  "title": "Conflict"\n}', steps: auth('admin').concat([
+    S('ctl', 'tktctl', 'status', 'Rol y validación correctos: entra.'),
+    S('svc', 'tktsvc', 'status', 'El ticket ya está en la versión 1 (otro administrador lo cambió) y el cliente envió 0. No coinciden: lanza `ConflictException` y no modifica nada.'),
+    S('out', 'handler', 'domain', 'El manejador global responde 409. El cliente debe volver a leer el ticket y decidir de nuevo.')
+  ]) }
+] },
+{ id: 'cmt-list', m: 'GET', p: '/tickets/{ticketId}/comments', sc: [
+  { name: 'El ticket existe', code: 200, cp: 'CP-17', req: [H_ANA], path: '/tickets/1/comments', res: '[\n  {\n    "id": 1,\n    "content": "Revisaremos la fuente de poder",\n    "author": "admin",\n    "ticketId": 1,\n    "createdAt": "2026-10-08T16:27:10.986773Z"\n  }\n]', steps: auth('ana').concat([
+    S('ctl', 'cmtctl', 'list', 'Toma `ticketId` de la ruta.'),
+    S('svc', 'cmtsvc', 'list', 'Primero comprueba que el ticket exista; luego pide sus comentarios.'),
+    S('repo', 'cmtsvc', 'repo', 'Trae al autor en la misma consulta.'),
+    S('db', null, null, 'Dos consultas.', 'SELECT count(*) FROM tickets WHERE id = 1;\nSELECT c.*, u.* FROM comments c JOIN users u ON u.id = c.author_id\n  WHERE c.ticket_id = 1 ORDER BY c.created_at ASC;'),
+    S('out', 'dto', 'comment', 'Cada comentario sale como `CommentResponse` (5 atributos). Responde 200.')
+  ]) },
+  { name: 'El ticket no existe', code: 404, cp: 'CP-18', req: [H_ANA], path: '/tickets/999/comments', res: '{\n  "detail": "No existe el ticket 999",\n  "instance": "/api/v1/tickets/999/comments",\n  "status": 404,\n  "title": "Not Found"\n}', steps: auth('ana').concat([
+    S('ctl', 'cmtctl', 'list', 'Llama al servicio con el id 999.'),
+    S('svc', 'cmtsvc', 'list', '`existsById` devuelve `false`: lanza `ResourceNotFoundException` en vez de devolver una lista vacía.'),
+    S('out', 'handler', 'domain', 'El manejador global responde 404.')
+  ]) }
+] },
+{ id: 'cmt-create', m: 'POST', p: '/tickets/{ticketId}/comments', sc: [
+  { name: 'Con texto', code: 201, cp: 'CP-19', req: [H_ADM, CT], path: '/tickets/1/comments', body: '{"content": "Revisaremos la fuente de poder"}', res: '{\n  "id": 1,\n  "content": "Revisaremos la fuente de poder",\n  "author": "admin",\n  "ticketId": 1,\n  "createdAt": "2026-10-08T16:27:10.986773Z"\n}', steps: auth('admin').concat([
+    S('ctl', 'cmtctl', 'create', '`@Valid` pasa. El controlador junta el ticket de la ruta, el texto del cuerpo y el autor del token.'),
+    S('svc', 'cmtsvc', 'create', 'Busca el ticket y al autor; crea y guarda el comentario en una transacción.'),
+    S('db', null, null, 'Tres consultas dentro de una transacción.', 'SELECT ... FROM tickets WHERE id = 1;\nSELECT * FROM users WHERE username = \'admin\';\nINSERT INTO comments (content, ticket_id, author_id, created_at, updated_at) VALUES (...);'),
+    S('out', 'dto', 'comment', 'Responde 201 con el comentario; el autor es el dueño del token.')
+  ]) },
+  { name: 'Texto vacío', code: 400, cp: 'CP-20', req: [H_ADM, CT], path: '/tickets/1/comments', body: '{"content": ""}', res: '{\n  "detail": "Hay campos inválidos",\n  "instance": "/api/v1/tickets/1/comments",\n  "status": 400,\n  "title": "Bad Request",\n  "errors": {"content": "must not be blank"}\n}', steps: auth('admin').concat([
+    S('ctl', 'dto', 'comment', '`content` tiene `@NotBlank` y llegó vacío: `@Valid` lanza `MethodArgumentNotValidException`.'),
+    S('out', 'handler', 'valid', 'El manejador responde 400 con `errors.content`. No se guarda nada.')
+  ]) }
+] }
+];
+
+/* ---------- pruebas ---------- */
+var TESTS = [
+['CP-05', 'cat', 'GET /categories', 'Token de ana', '200 y la lista', '1 categoría con sus 4 atributos', 'CategoryControllerTest'],
+['CP-06', 'cat', 'GET /categories', 'Sin cabecera Authorization', '401', 'El código es 401', 'CategoryControllerTest'],
+['CP-07', 'cat', 'POST /categories', 'Token de admin + categoría "Redes"', '201 y la categoría', 'active es true; la base tiene 2 categorías', 'CategoryControllerTest'],
+['CP-08', 'cat', 'POST /categories', 'Token de admin + nombre vacío', '400', 'errors.name existe; la base sigue con 1', 'CategoryControllerTest'],
+['CP-09', 'tkt', 'GET /tickets', 'Token de ana, sin parámetros', '200 y la primera página', '1 elemento, página 0, tamaño 20, total 1', 'TicketControllerTest'],
+['CP-10', 'tkt', 'GET /tickets', 'Token de ana + status=CLOSED', '200 y página vacía', '0 elementos, total 0', 'TicketControllerTest'],
+['CP-11', 'tkt', 'GET /tickets/{id}', 'Token de ana + id existente', '200 y el ticket', 'Llegan sus 10 atributos', 'TicketControllerTest'],
+['CP-12', 'tkt', 'GET /tickets/{id}', 'Token de ana + id inexistente', '404', 'detail nombra el id buscado', 'TicketControllerTest'],
+['CP-13', 'tkt', 'POST /tickets', 'Token de ana + ticket válido', '201 y el ticket', 'OPEN, versión 0, creador ana; la base tiene 2', 'TicketControllerTest'],
+['CP-14', 'tkt', 'POST /tickets', 'Token de ana + título vacío', '400', 'errors.title existe; la base sigue con 1', 'TicketControllerTest'],
+['CP-15', 'tkt', 'PUT /tickets/{id}/status', 'Token de admin + IN_PROGRESS + versión 0', '200 y el ticket', 'Versión 1; en la base el estado es IN_PROGRESS', 'TicketControllerTest'],
+['CP-16', 'tkt', 'PUT /tickets/{id}/status', 'Token de ana + CLOSED', '403', 'En la base el ticket sigue OPEN', 'TicketControllerTest'],
+['CP-21', 'tkt', 'PUT /tickets/{id}/status', 'Token de admin + CLOSED + versión 99', '409', 'En la base el ticket sigue OPEN', 'TicketControllerTest'],
+['CP-17', 'cmt', 'GET /tickets/{ticketId}/comments', 'Token de admin + ticket con 1 comentario', '200 y la lista', '1 comentario con sus 5 atributos', 'CommentControllerTest'],
+['CP-18', 'cmt', 'GET /tickets/{ticketId}/comments', 'Token de admin + id inexistente', '404', 'El código es 404', 'CommentControllerTest'],
+['CP-19', 'cmt', 'POST /tickets/{ticketId}/comments', 'Token de admin + texto', '201 y el comentario', 'Autor admin; 1 comentario en la base', 'CommentControllerTest'],
+['CP-20', 'cmt', 'POST /tickets/{ticketId}/comments', 'Token de admin + texto vacío', '400', 'No hay comentarios en la base', 'CommentControllerTest'],
+['CP-01', 'aux', 'POST /auth/login', 'admin / admin123', '200 y un token', 'El dueño del token es admin', 'AuthControllerTest'],
+['CP-02', 'aux', 'POST /auth/login', 'admin / contraseña incorrecta', '401', 'detail lo explica; no hay token', 'AuthControllerTest'],
+['CP-03', 'aux', 'POST /users', 'Token de admin + datos de luis', '201 y el usuario', 'Sin contraseña en la respuesta; hash BCrypt en la base', 'UserControllerTest'],
+['CP-04', 'aux', 'POST /users', 'Token de ana + los mismos datos', '403', 'luis no existe en la base', 'UserControllerTest']
+];
+var UNIT = [
+['UT-01', 'CategoryService.create', 'El nombre no existe', 'Guarda y devuelve la categoría activa'],
+['UT-02', 'CategoryService.create', 'El nombre ya existe', 'DuplicateResourceException; no guarda'],
+['UT-03', 'UserService.create', 'Usuario nuevo', 'Lo que se guarda es el hash, no la contraseña'],
+['UT-04', 'UserService.create', 'El username ya existe', 'DuplicateResourceException; no guarda'],
+['UT-05', 'TicketService.create', 'Datos válidos', 'Ticket OPEN a nombre del usuario recibido'],
+['UT-06', 'TicketService.create', 'La categoría no existe', 'InvalidRequestException; no guarda'],
+['UT-07', 'TicketService.changeStatus', 'La versión coincide', 'Cambia el estado y guarda'],
+['UT-08', 'TicketService.changeStatus', 'La versión es antigua', 'ConflictException; el estado no cambia'],
+['UT-09', 'TicketService.findAll', 'Orden por un atributo no permitido', 'InvalidRequestException; no consulta la base']
+];
+
+/* ---------- preguntas ---------- */
+var QA = [
+['¿Cuál es la diferencia entre 401 y 403?', '401 es "no sé quién eres": no hay token, es falso o venció. Lo responde `SecurityConfig` con `HttpStatusEntryPoint`. 403 es "sé quién eres, pero no tienes permiso": el token es válido y el rol no alcanza. Lo provoca `@PreAuthorize("hasRole(\'ADMIN\')")`.'],
+['¿Dónde se ve que los usuarios se manejan desde base de datos?', 'En las tablas `users`, `roles` y `user_roles` (migración V1) y en `CustomUserDetailsService`, que busca al usuario con `userRepository.findByUsername` en cada login y en cada petición con token. Además `POST /users` crea usuarios nuevos en la base.'],
+['¿Qué contiene el token y por qué no lleva los roles?', 'Tres datos: `sub` (el username), `iat` (cuándo se emitió) y `exp` (cuándo vence), más la firma HS256. El contenido no está cifrado, solo codificado, por eso nunca se guarda ahí una contraseña. Los roles se leen de la base en cada petición: si le quitas un rol a alguien, aplica de inmediato y no cuando venza su token.'],
+['¿Qué pasa si alguien modifica el token?', 'La firma se calcula con el contenido y con `JWT_SECRET`. Si cambia una letra del contenido, la firma ya no coincide, `parseSignedClaims` lanza `JwtException`, el filtro la atrapa y la petición sigue como anónima: 401.'],
+['¿Por qué BCrypt para las contraseñas?', 'Guarda un hash, no la contraseña. Es lento a propósito y usa una sal distinta por contraseña, así que dos usuarios con la misma clave tienen hashes distintos y un ataque por fuerza bruta es muy caro. `UserResponse` no tiene campo de contraseña, así que es imposible que el hash salga en una respuesta.'],
+['¿Por qué desactivan CSRF y las sesiones?', 'CSRF ataca aplicaciones que se identifican con cookies que el navegador envía solo. Esta API no usa cookies: cada petición lleva su token en una cabecera. Por lo mismo es `STATELESS`: el servidor no guarda sesiones.'],
+['¿Por qué la página empieza en 0 y no en 1?', 'Es la convención de Spring Data: `Pageable` trata la página como un índice, porque el salto en SQL es `OFFSET = page × size`. La página 0 salta 0 filas. Se puede cambiar con `spring.data.web.pageable.one-indexed-parameters=true`, pero mantuvimos el estándar del framework.'],
+['¿Por qué DTO y no devolver las entidades?', 'Cuatro razones: `UserResponse` no expone el hash; `TicketRequest` solo acepta lo que el cliente puede decidir (no status, creator ni version); se puede cambiar una tabla sin cambiar el JSON; y una entidad serializada fuera de la transacción falla al tocar una relación LAZY.'],
+['¿Qué es el bloqueo optimista y cómo lo implementaron?', 'Evita que dos administradores se pisen. El ticket tiene una columna `version` con `@Version`. El cliente recibe la versión al leer y la devuelve al modificar. Hay dos defensas: el servicio compara las versiones (caso lento) y Hibernate agrega `WHERE version = ?` al UPDATE (caso simultáneo). Las dos terminan en 409. Se llama optimista porque no bloquea la fila: supone que los choques son raros.'],
+['¿Por qué saveAndFlush y no save?', 'Con `save`, Hibernate enviaría el UPDATE al terminar la transacción, después de armar la respuesta, y el JSON saldría con la versión vieja. `saveAndFlush` lo envía en ese momento, así la respuesta ya trae la versión y la fecha nuevas.'],
+['¿Qué es @EntityGraph y el problema N+1?', 'Las relaciones son LAZY. Sin `@EntityGraph`, listar 20 tickets haría 1 consulta para los tickets y hasta 40 más para la categoría y el creador de cada uno. `@EntityGraph` los trae con un JOIN en la misma consulta.'],
+['¿Qué hace @Transactional?', 'Sobre la clase con `readOnly = true`: cada método corre en una transacción de solo lectura. Sobre un método que escribe: si lanza una excepción, todo lo que hizo se deshace. También mantiene la conexión abierta para leer relaciones LAZY y convertir a DTO.'],
+['¿Por qué una capa de servicios?', 'El controlador solo traduce HTTP y el repositorio solo habla con la base. Las reglas del negocio viven en un lugar, con una transacción por operación, y se pueden probar sin levantar Spring (pruebas unitarias con Mockito).'],
+['¿Por qué Flyway y ddl-auto=validate?', 'Flyway aplica scripts SQL numerados una sola vez por base y anota cuáles ejecutó en `flyway_schema_history`. El esquema queda versionado en git. Hibernate no toca las tablas: con `validate` solo comprueba que coinciden con las entidades y, si no, la aplicación no arranca.'],
+['¿Por qué una lista blanca para ordenar?', 'El parámetro `sort` viene del cliente. Sin `SORTABLE_FIELDS`, un nombre mal escrito causaría un 500 y alguien podría ordenar por columnas sin índice o que no debe conocer, como `passwordHash`.'],
+['¿Por qué a veces el 400 dice "Failed to read request" y otras lista los campos?', 'Son dos momentos distintos. Si el JSON está mal formado o trae un enum desconocido, Jackson no puede crear el objeto y Spring responde el mensaje genérico. Si el objeto se crea pero un campo no cumple `@NotBlank` o `@Size`, falla `@Valid` y nuestro manejador agrega `errors` con cada campo.'],
+['¿Por qué el creador del ticket no viene en el JSON?', 'Porque el cliente podría mentir. El controlador toma el username del objeto `Authentication` que el filtro JWT dejó en el contexto: un ticket siempre queda a nombre del dueño del token.'],
+['¿Por qué no hay un @ExceptionHandler(Exception.class)?', 'Atraparía también el `AccessDeniedException` de `@PreAuthorize` y convertiría los 403 en 500.'],
+['¿Qué diferencia hay entre sus pruebas unitarias y de integración?', 'Las 9 unitarias prueban un servicio aislado con repositorios simulados por Mockito, sin levantar Spring: tardan milisegundos. Las 21 de integración levantan la aplicación completa con MockMvc y una base H2 en memoria: la petición pasa por el filtro, el controlador, el servicio y la base. Cada servicio REST tiene al menos 2 casos con entrada, salida esperada y verificación.'],
+['¿Por qué /api/v1 en las rutas?', 'Versionar permite publicar `/api/v2` con un JSON distinto sin romper a los clientes que ya usan `/api/v1`. El prefijo está en una constante (`ApiPaths.V1`) que usan los controladores y las reglas de seguridad.']
+];
+
+/* ---------- demo ---------- */
+var DEMO = [
+['Preparar variables', 'API=http://localhost:8080/api/v1\nJSON=\'Content-Type: application/json\'', ''],
+['Sin token', 'curl -s -w \'\\n[%{http_code}]\\n\' $API/tickets', '401'],
+['Login incorrecto', 'curl -s -w \'\\n[%{http_code}]\\n\' -X POST $API/auth/login -H "$JSON" \\\n  -d \'{"username":"admin","password":"mala"}\'', '401'],
+['Login y guardar tokens', 'TOKEN_ADMIN=$(curl -s -X POST $API/auth/login -H "$JSON" \\\n  -d \'{"username":"admin","password":"admin123"}\' | sed -E \'s/.*"token":"([^"]+)".*/\\1/\')\nTOKEN_ANA=$(curl -s -X POST $API/auth/login -H "$JSON" \\\n  -d \'{"username":"ana","password":"ana123"}\' | sed -E \'s/.*"token":"([^"]+)".*/\\1/\')\necho $TOKEN_ADMIN', 'eyJ...'],
+['Listar categorías', 'curl -s -w \'\\n[%{http_code}]\\n\' $API/categories -H "Authorization: Bearer $TOKEN_ANA"', '200'],
+['Crear categoría (admin)', 'curl -s -w \'\\n[%{http_code}]\\n\' -X POST $API/categories \\\n  -H "Authorization: Bearer $TOKEN_ADMIN" -H "$JSON" \\\n  -d \'{"name":"Accesos","description":"Cuentas, contraseñas y permisos"}\'', '201'],
+['Crear ticket (ana)', 'curl -s -w \'\\n[%{http_code}]\\n\' -X POST $API/tickets \\\n  -H "Authorization: Bearer $TOKEN_ANA" -H "$JSON" \\\n  -d \'{"title":"La PC no enciende","description":"Presiono el botón y no pasa nada","priority":"HIGH","categoryId":1}\'', '201'],
+['Ticket con título vacío', 'curl -s -w \'\\n[%{http_code}]\\n\' -X POST $API/tickets \\\n  -H "Authorization: Bearer $TOKEN_ANA" -H "$JSON" \\\n  -d \'{"title":"","description":"x","priority":"HIGH","categoryId":1}\'', '400'],
+['Lista paginada', 'curl -s -w \'\\n[%{http_code}]\\n\' "$API/tickets?status=OPEN&page=0&size=5&sort=createdAt,desc" \\\n  -H "Authorization: Bearer $TOKEN_ANA"', '200'],
+['Orden no permitido', 'curl -s -w \'\\n[%{http_code}]\\n\' "$API/tickets?sort=passwordHash" -H "Authorization: Bearer $TOKEN_ANA"', '400'],
+['Ticket que no existe', 'curl -s -w \'\\n[%{http_code}]\\n\' $API/tickets/999 -H "Authorization: Bearer $TOKEN_ANA"', '404'],
+['ana intenta cambiar el estado', 'curl -s -w \'\\n[%{http_code}]\\n\' -X PUT $API/tickets/1/status \\\n  -H "Authorization: Bearer $TOKEN_ANA" -H "$JSON" -d \'{"status":"CLOSED","version":0}\'', '403'],
+['admin cambia el estado', 'curl -s -w \'\\n[%{http_code}]\\n\' -X PUT $API/tickets/1/status \\\n  -H "Authorization: Bearer $TOKEN_ADMIN" -H "$JSON" -d \'{"status":"IN_PROGRESS","version":0}\'', '200'],
+['Repetir el mismo comando (versión vieja)', 'curl -s -w \'\\n[%{http_code}]\\n\' -X PUT $API/tickets/1/status \\\n  -H "Authorization: Bearer $TOKEN_ADMIN" -H "$JSON" -d \'{"status":"IN_PROGRESS","version":0}\'', '409'],
+['Comentar', 'curl -s -w \'\\n[%{http_code}]\\n\' -X POST $API/tickets/1/comments \\\n  -H "Authorization: Bearer $TOKEN_ADMIN" -H "$JSON" \\\n  -d \'{"content":"Revisaremos la fuente de poder"}\'', '201'],
+['Listar comentarios', 'curl -s -w \'\\n[%{http_code}]\\n\' $API/tickets/1/comments -H "Authorization: Bearer $TOKEN_ANA"', '200'],
+['Correr las pruebas', './gradlew cleanTest test\nopen build/reports/tests/test/index.html', '31 PASSED']
+];
+
+/* ---------- vistas ---------- */
+var state = { tab: 'rubrica', op: 'tkt-create', sc: 0, step: 0, file: 'filter', quiz: false, tf: 'all' };
+var main = document.getElementById('main');
+
+function opRow(o) {
+  return h('tr', null, h('td', { class: 'nw' }, h('span', { class: 'chip ' + o[0], text: o[0] })), h('td', null, h('code', { text: o[1] })), h('td', { text: o[2] }), h('td', { text: o[3] }), h('td', { text: o[4] }));
+}
+function viewRubrica() {
+  var ops8 = [
+    ['GET', '/categories', 'CategoryController', 'Con token', 'Categoría'], ['POST', '/categories', 'CategoryController', 'Solo ADMIN', 'Categoría'],
+    ['GET', '/tickets', 'TicketController', 'Con token', 'Ticket (página)'], ['GET', '/tickets/{id}', 'TicketController', 'Con token', 'Ticket'],
+    ['POST', '/tickets', 'TicketController', 'Con token', 'Ticket'], ['PUT', '/tickets/{id}/status', 'TicketController', 'Solo ADMIN', 'Ticket'],
+    ['GET', '/tickets/{ticketId}/comments', 'CommentController', 'Con token', 'Comentario'], ['POST', '/tickets/{ticketId}/comments', 'CommentController', 'Con token', 'Comentario'],
+    ['POST', '/users', 'UserController', 'Solo ADMIN', 'Usuario']
+  ];
+  return h('section', { class: 'tab' },
+    h('h2', { text: 'Rúbrica: qué pide y dónde se cumple' }),
+    h('p', { class: 'lead', text: 'Tres criterios, 20 puntos. Cada tarjeta dice qué mostrar para el puntaje completo.' }),
+    h('div', { class: 'grid' },
+      h('div', { class: 'card' }, h('span', { class: 'pts', text: '8 pts' }), h('h3', { text: 'Operaciones REST' }),
+        h('ul', { class: 'clean' },
+          h('li', null, rich('9 operaciones con acceso a base de datos en 4 controladores (la rúbrica pide al menos 8 en 2).')),
+          h('li', null, rich('4 objetos completos: Ticket (10 atributos), Comentario (5), Usuario (5), Categoría (4).')),
+          h('li', null, rich('El proyecto tiene 10 operaciones en total: la décima es `POST /auth/login`.')))),
+      h('div', { class: 'card' }, h('span', { class: 'pts', text: '6 pts' }), h('h3', { text: 'Seguridad' }),
+        h('ul', { class: 'clean' },
+          h('li', null, rich('Tokens JWT: `JwtService`, `JwtAuthenticationFilter`, `POST /auth/login`.')),
+          h('li', null, rich('Usuarios desde base de datos: tablas `users`, `roles`, `user_roles` y `CustomUserDetailsService`.')),
+          h('li', null, rich('Mecanismos: BCrypt, roles con `@PreAuthorize`, sin sesiones, secretos en `.env`.')))),
+      h('div', { class: 'card' }, h('span', { class: 'pts', text: '6 pts' }), h('h3', { text: 'Presentación' }),
+        h('ul', { class: 'clean' },
+          h('li', null, rich('2 casos de prueba por servicio REST, con entrada, salida esperada y verificación (pestaña Pruebas).')),
+          h('li', null, rich('Sin inconvenientes: seguir la lista de la pestaña Demo antes de empezar.')),
+          h('li', null, rich('Clara: explicar el recorrido de una petición con la pestaña Flujo.'))))),
+    h('h3', { text: 'Las 9 operaciones que se exponen' }),
+    h('div', { class: 'tablebox' }, h('table', null,
+      h('thead', null, h('tr', null, ['Método', 'Ruta (bajo /api/v1)', 'Controlador', 'Quién puede', 'Objeto'].map(function (t) { return h('th', { text: t }); }))),
+      h('tbody', null, ops8.map(opRow)))),
+    h('h3', { text: 'Recorrido de toda petición' }),
+    h('div', { class: 'pipe' }, LAYERS.map(function (l, i) { return [i ? h('span', { class: 'arrow', text: '→' }) : null, h('span', { class: 'node', text: l[1] })]; }).reduce(function (a, b) { return a.concat(b); }, [])),
+    h('p', { class: 'lead', text: 'Cada capa solo habla con la siguiente. El controlador no conoce repositorios y el servicio no conoce HTTP. Si algo falla, la capa lanza una excepción y GlobalExceptionHandler la convierte en JSON.' })
+  );
+}
+
+function getOp() { return OPS.filter(function (o) { return o.id === state.op; })[0]; }
+function viewFlujo() {
+  var op = getOp(), sc = op.sc[state.sc], steps = sc.steps;
+  if (state.step >= steps.length) state.step = 0;
+  var reached = {}; steps.forEach(function (s) { reached[s.layer] = 1; }); reached.client = 1; reached.out = 1;
+  var cur = steps[state.step].layer;
+  var path = '/api/v1' + (sc.path || op.p) + (sc.q || '');
+  var reqText = op.m + ' ' + path + (sc.req.length ? '\n' + sc.req.join('\n') : '') + (sc.body ? '\n\n' + sc.body : '');
+
+  var stepEls = steps.map(function (s, i) {
+    var active = i === state.step;
+    var lname = LAYERS.filter(function (l) { return l[0] === s.layer; })[0][1];
+    var el = h('div', { class: 'step' + (active ? ' active' : ''), id: 'step-' + i },
+      h('button', { 'aria-expanded': String(active), onclick: function () { state.step = i; render(); } },
+        h('span', { class: 'n', text: String(i + 1).padStart(2, '0') }),
+        h('span', null, h('span', { class: 'lay', text: lname + (s.f ? ' · ' + FILE[s.f].name : '') }), h('span', null, rich(s.t)))));
+    if (active) {
+      var body = h('div', { class: 'body' });
+      if (s.code) body.appendChild(h('pre', { class: 'raw', text: s.code }));
+      if (s.f) {
+        body.appendChild(renderBlock(s.f, s.b));
+        body.appendChild(h('button', { class: 'btn', style: 'align-self:flex-start', onclick: function () { state.tab = 'codigo'; state.file = s.f; render(); } }, 'Abrir ' + FILE[s.f].name + ' completo'));
+      }
+      el.appendChild(body);
+    }
+    return el;
+  });
+
+  return h('section', { class: 'tab' },
+    h('h2', { text: 'Flujo de una petición' }),
+    h('p', { class: 'lead', text: 'Elige una operación y un caso. Avanza paso a paso (o con las flechas ← → del teclado) y mira qué archivo interviene, qué líneas se ejecutan y por qué.' }),
+    h('div', { class: 'ops' }, OPS.map(function (o) {
+      return h('button', { 'aria-pressed': String(o.id === state.op), onclick: function () { state.op = o.id; state.sc = 0; state.step = 0; render(); } },
+        h('span', { class: 'chip ' + o.m, text: o.m }), h('span', { class: 'p', text: o.p }));
+    })),
+    h('div', { class: 'pills' }, op.sc.map(function (x, i) {
+      return h('button', { 'aria-pressed': String(i === state.sc), onclick: function () { state.sc = i; state.step = 0; render(); } }, statusChip(x.code), x.name);
+    })),
+    h('div', { class: 'two' },
+      h('div', { class: 'card' }, h('span', { class: 'eyebrow', text: 'Petición' }), h('pre', { class: 'raw', text: reqText })),
+      h('div', { class: 'card' }, h('span', { class: 'eyebrow' }, 'Respuesta ', statusChip(sc.code)), h('pre', { class: 'raw', text: sc.res }),
+        sc.cp ? h('span', { class: 'small', text: 'Lo comprueba la prueba ' + sc.cp + '.' }) : h('span', { class: 'small', text: 'Caso extra para explicar; sin prueba automática propia.' }))),
+    h('div', null, h('span', { class: 'eyebrow', text: 'Capas que recorre (las punteadas no se alcanzan)' }),
+      h('div', { class: 'pipe', style: 'margin-top:6px' }, LAYERS.map(function (l, i) {
+        return [i ? h('span', { class: 'arrow', text: '→' }) : null, h('span', { class: 'node' + (l[0] === cur ? ' on' : '') + (reached[l[0]] ? '' : ' off'), text: l[1] })];
+      }).reduce(function (a, b) { return a.concat(b); }, []))),
+    h('div', { class: 'ctrl' },
+      h('button', { class: 'btn', disabled: state.step === 0 ? '' : null, onclick: function () { move(-1); } }, '← Anterior'),
+      h('button', { class: 'btn pri', disabled: state.step === steps.length - 1 ? '' : null, onclick: function () { move(1); } }, 'Siguiente →'),
+      h('span', { class: 'small', text: 'Paso ' + (state.step + 1) + ' de ' + steps.length })),
+    h('div', { class: 'steps' }, stepEls)
+  );
+}
+function move(d) {
+  var n = getOp().sc[state.sc].steps.length, s = state.step + d;
+  if (s < 0 || s >= n) return;
+  state.step = s; render();
+  var el = document.getElementById('step-' + s);
+  if (el && el.scrollIntoView) el.scrollIntoView({ block: 'nearest' });
+}
+
+function viewCodigo() {
+  var groups = [], seen = {};
+  FILES.forEach(function (f) { if (!seen[f.g]) { seen[f.g] = []; groups.push(f.g); } seen[f.g].push(f); });
+  var f = FILE[state.file];
+  return h('section', { class: 'tab' },
+    h('h2', { text: 'Código línea por línea' }),
+    h('p', { class: 'lead', text: 'A la izquierda el código real (sin imports ni getters); a la derecha qué significa cada línea y por qué se usa. Las líneas resaltadas tienen explicación.' }),
+    h('div', { class: 'ctrl' },
+      h('button', { class: 'btn' + (state.quiz ? ' pri' : ''), 'aria-pressed': String(state.quiz), onclick: function () { state.quiz = !state.quiz; render(); } }, state.quiz ? 'Modo repaso activado' : 'Modo repaso: ocultar explicaciones'),
+      state.quiz ? h('span', { class: 'small', text: 'Explica la línea en voz alta y luego tócala para comprobar.' }) : null),
+    h('div', { class: 'codelay' },
+      h('div', { class: 'files' }, groups.map(function (g) {
+        return h('div', { class: 'g' }, h('span', { class: 'eyebrow', text: g }), seen[g].map(function (x) {
+          return h('button', { 'aria-pressed': String(x.id === state.file), onclick: function () { state.file = x.id; render(); } }, x.name);
+        }));
+      })),
+      h('div', { class: 'filemain' + (state.quiz ? ' quiz' : '') },
+        h('div', null, h('h3', { text: f.name }), h('span', { class: 'small mono', text: f.path }), h('p', { text: f.intro, style: 'margin-top:4px;max-width:72ch' })),
+        f.blocks.map(function (b) { return renderBlock(f.id, b.k); })))
+  );
+}
+
+function viewPruebas() {
+  var filters = [['all', 'Todas'], ['cat', 'Categorías'], ['tkt', 'Tickets'], ['cmt', 'Comentarios'], ['aux', 'Login y usuarios']];
+  var rows = TESTS.filter(function (t) { return state.tf === 'all' || t[1] === state.tf; });
+  return h('section', { class: 'tab' },
+    h('h2', { text: 'Casos de prueba' }),
+    h('p', { class: 'lead', text: 'La rúbrica pide al menos 2 casos por servicio REST, cada uno con entrada, salida esperada y verificación. En el código, cada prueba lleva esos tres comentarios encima.' }),
+    h('div', { class: 'pills' }, filters.map(function (f) {
+      return h('button', { 'aria-pressed': String(f[0] === state.tf), onclick: function () { state.tf = f[0]; render(); } }, f[1]);
+    })),
+    h('div', { class: 'tablebox' }, h('table', null,
+      h('thead', null, h('tr', null, ['ID', 'Servicio REST', 'Entrada', 'Salida esperada', 'Verificación', 'Clase'].map(function (t) { return h('th', { text: t }); }))),
+      h('tbody', null, rows.map(function (t) {
+        var code = parseInt(t[4], 10);
+        return h('tr', null, h('td', { class: 'nw mono', text: t[0] }), h('td', null, h('code', { text: t[2] })), h('td', { text: t[3] }),
+          h('td', null, statusChip(code), ' ' + t[4].replace(/^\d+\s*/, '')), h('td', { text: t[5] }), h('td', { class: 'mono', text: t[6] }));
+      })))),
+    h('div', { class: 'two' },
+      h('div', { class: 'card' }, h('h3', { text: 'De integración (21)' }), h('p', null, rich('Levantan la aplicación completa con `@SpringBootTest`. MockMvc envía peticiones HTTP simuladas que pasan por el filtro JWT, el controlador, el servicio y una base H2 en memoria. Antes de cada prueba `BaseIntegrationTest` deja los mismos datos: admin, ana, la categoría Hardware y un ticket de ana.'))),
+      h('div', { class: 'card' }, h('h3', { text: 'Unitarias (9)' }), h('p', null, rich('Prueban un servicio aislado. Los repositorios son objetos simulados con Mockito (`@Mock`, `when(...).thenReturn(...)`, `verify`). No levantan Spring ni tocan una base: tardan milisegundos.')))),
+    h('h3', { text: 'Pruebas unitarias' }),
+    h('div', { class: 'tablebox' }, h('table', null,
+      h('thead', null, h('tr', null, ['ID', 'Clase y método', 'Condición', 'Resultado esperado'].map(function (t) { return h('th', { text: t }); }))),
+      h('tbody', null, UNIT.map(function (u) { return h('tr', null, h('td', { class: 'nw mono', text: u[0] }), h('td', null, h('code', { text: u[1] })), h('td', { text: u[2] }), h('td', { text: u[3] })); })))),
+    h('pre', { class: 'raw', text: './gradlew cleanTest test          # las 31: 9 unitarias + 21 de integración + contextLoads\nopen build/reports/tests/test/index.html' })
+  );
+}
+
+function viewPreguntas() {
+  return h('section', { class: 'tab' },
+    h('h2', { text: 'Preguntas que puede hacer el profesor' }),
+    h('p', { class: 'lead', text: 'Responde en voz alta antes de abrir cada una.' }),
+    h('div', { class: 'steps' }, QA.map(function (q) {
+      return h('details', { class: 'q' }, h('summary', { text: q[0] }), h('div', null, rich(q[1])));
+    }))
+  );
+}
+
+function copy(text, btn) {
+  var done = function () { btn.textContent = 'Copiado'; setTimeout(function () { btn.textContent = 'Copiar'; }, 1400); };
+  try { navigator.clipboard.writeText(text).then(done, function () { btn.textContent = 'Selecciona y copia'; }); }
+  catch (e) { btn.textContent = 'Selecciona y copia'; }
+}
+function viewDemo() {
+  return h('section', { class: 'tab' },
+    h('h2', { text: 'Guion de la demostración' }),
+    h('div', { class: 'card' }, h('h3', { text: 'Antes de empezar' }), h('ul', { class: 'clean' },
+      h('li', null, rich('Arranca con `./gradlew bootRun`, no con el botón Run del IDE. El IDE compila sin el flag `-parameters` y las rutas con `{id}` o `?status=` responden 500.')),
+      h('li', null, rich('Los tokens duran 60 minutos: vuelve a hacer login justo antes de exponer.')),
+      h('li', null, rich('El bloqueo optimista depende de la versión actual del ticket. Usa un ticket recién creado (versión 0) o lee su versión con `GET /tickets/{id}` antes del `PUT`.')),
+      h('li', null, rich('Ten abierto el informe de pruebas (`build/reports/tests/test/index.html`) por si falla la red.')),
+      h('li', null, rich('Los ids cambian según lo que ya exista en la base: ajusta el `1` de los comandos.')))),
+    h('div', { class: 'steps' }, DEMO.map(function (d, i) {
+      var btn = h('button', { class: 'btn' }, 'Copiar');
+      btn.addEventListener('click', function () { copy(d[1], btn); });
+      var code = parseInt(d[2], 10);
+      return h('div', { class: 'card cmd' },
+        h('div', { class: 'hd' }, h('h3', { text: (i + 1) + '. ' + d[0] }),
+          h('span', { class: 'ctrl' }, d[2] ? (code ? statusChip(code) : h('span', { class: 'chip', text: d[2] })) : null, btn)),
+        h('pre', { class: 'raw', text: d[1] }));
+    }))
+  );
+}
+
+var TABS = [['rubrica', 'Rúbrica', viewRubrica], ['flujo', 'Flujo de una petición', viewFlujo], ['codigo', 'Código línea por línea', viewCodigo], ['pruebas', 'Pruebas', viewPruebas], ['preguntas', 'Preguntas', viewPreguntas], ['demo', 'Demo', viewDemo]];
+function render() {
+  var tabs = document.getElementById('tabs');
+  tabs.textContent = '';
+  TABS.forEach(function (t) {
+    tabs.appendChild(h('button', { role: 'tab', 'aria-selected': String(t[0] === state.tab), onclick: function () {
+      state.tab = t[0]; try { history.replaceState(null, '', '#' + t[0]); } catch (e) {} render(); window.scrollTo(0, 0);
+    } }, t[1]));
+  });
+  var view = TABS.filter(function (t) { return t[0] === state.tab; })[0][2];
+  main.textContent = '';
+  main.appendChild(view());
+}
+document.addEventListener('keydown', function (e) {
+  if (state.tab !== 'flujo') return;
+  var tag = (e.target.tagName || '').toLowerCase();
+  if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+  if (e.key === 'ArrowRight') move(1);
+  if (e.key === 'ArrowLeft') move(-1);
+});
+var hash = (location.hash || '').slice(1);
+if (TABS.some(function (t) { return t[0] === hash; })) state.tab = hash;
+render();
+})();
+</script>

@@ -1,0 +1,54 @@
+<h1>Tickets</h1>
+
+<form class="tarjeta en-linea" #filtroForm="ngForm" (ngSubmit)="onBuscar(filtroForm)">
+  <div class="campo">
+    <label for="status">Estado</label>
+    <select id="status" name="status" ngModel="">
+      <option value="">Todos</option>
+      <option value="OPEN">OPEN</option>
+      <option value="IN_PROGRESS">IN_PROGRESS</option>
+      <option value="RESOLVED">RESOLVED</option>
+      <option value="CLOSED">CLOSED</option>
+    </select>
+  </div>
+  <div class="campo">
+    <label for="size">Por página</label>
+    <input type="number" id="size" name="size" [ngModel]="5" required min="1" max="100" #size="ngModel">
+    <div class="error" *ngIf="size.invalid && size.touched">
+      <div *ngIf="size.errors?.['required']">Obligatorio</div>
+      <div *ngIf="size.errors?.['min']">Mínimo 1</div>
+      <div *ngIf="size.errors?.['max']">Máximo 100</div>
+    </div>
+  </div>
+  <button type="submit" [disabled]="filtroForm.invalid">Buscar</button>
+</form>
+
+<p class="aviso malo" *ngIf="error()">{{ error() }}</p>
+
+<div *ngIf="pagina() as p">
+  <table>
+    <thead>
+      <tr><th>ID</th><th>Título</th><th>Estado</th><th>Prioridad</th><th>Categoría</th><th>Creador</th><th></th></tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let ticket of p.content">
+        <td>{{ ticket.id }}</td>
+        <td>{{ ticket.title }}</td>
+        <td><span class="etiqueta">{{ ticket.status }}</span></td>
+        <td>{{ ticket.priority }}</td>
+        <td>{{ ticket.category }}</td>
+        <td>{{ ticket.creator }}</td>
+        <td><a [routerLink]="['/tickets', ticket.id]">Ver</a></td>
+      </tr>
+      <tr *ngIf="p.content.length === 0">
+        <td colspan="7">No hay tickets con ese filtro.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="paginacion">
+    <button type="button" class="secundario" [disabled]="p.page === 0" (click)="cargar(p.page - 1)">Anterior</button>
+    <span>Página {{ p.page + 1 }} de {{ p.totalPages || 1 }} · {{ p.totalElements }} tickets</span>
+    <button type="button" class="secundario" [disabled]="p.page + 1 >= p.totalPages" (click)="cargar(p.page + 1)">Siguiente</button>
+  </div>
+</div>

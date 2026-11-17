@@ -1,0 +1,17 @@
+<header class="barra">
+  <a class="marca" routerLink="/tickets">Gestor de Tickets</a>
+  <nav *ngIf="auth.usuario()">
+    <a routerLink="/tickets" routerLinkActive="activo" [routerLinkActiveOptions]="{ exact: true }">Tickets</a>
+    <a routerLink="/tickets/nuevo" routerLinkActive="activo">Nuevo ticket</a>
+    <a routerLink="/categorias" routerLinkActive="activo">Categorías</a>
+    <a routerLink="/usuarios/nuevo" routerLinkActive="activo">Nuevo usuario</a>
+  </nav>
+  <div class="sesion" *ngIf="auth.usuario()">
+    <span>{{ auth.usuario() }}</span>
+    <button type="button" class="secundario" (click)="onSalir()">Salir</button>
+  </div>
+</header>
+
+<main class="contenido">
+  <router-outlet />
+</main>
